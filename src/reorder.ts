@@ -102,6 +102,9 @@ const removeItem = (
   return { items: newItems, instructions };
 };
 
+/**
+ * Takes an action (insert, remove, move) on the items.
+ */
 export const reorder = (
   items: SortableItem[],
   action: Action
