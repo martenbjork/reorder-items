@@ -29,16 +29,17 @@ function measurePerformance(runs: number, columns: number, rows: number) {
 }
 
 // Increasing number of runs
+measurePerformance(10, 100, 100);
 measurePerformance(100, 100, 100);
-measurePerformance(200, 100, 100);
-measurePerformance(300, 100, 100);
+// measurePerformance(1000, 100, 100);
 
 // Increasing scale of grid
 measurePerformance(100, 10, 100);
 measurePerformance(100, 100, 100);
 measurePerformance(100, 1000, 100);
-measurePerformance(100, 10000, 100);
 measurePerformance(100, 100, 10);
 measurePerformance(100, 100, 100);
 measurePerformance(100, 100, 1000);
-measurePerformance(100, 100, 10000);
+
+// Realistic worst case scenario
+measurePerformance(1, 250, 20);
