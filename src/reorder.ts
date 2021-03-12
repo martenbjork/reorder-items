@@ -7,11 +7,23 @@ import {
   Instructions,
 } from "./reorder.types";
 
+const clampOrder = (items: SortableItem[], order: number): number => {
+  let newOrder = order;
+  if (newOrder < 0) {
+    newOrder = 0;
+  } else if (newOrder > items.length + 1) {
+    newOrder = items.length;
+  }
+  return newOrder;
+};
+
 const insertItem = (
   items: SortableItem[],
   action: InsertAction
 ): { items: SortableItem[]; instructions: Instructions } => {
   let instructions: Instruction[] = [];
+
+  let newOrder = clampOrder(items, action.order);
 
   let newItems = [...items].map((item) => {
     const itemIsInColumn =
@@ -24,13 +36,11 @@ const insertItem = (
       };
 
       let instruction: Instruction = {
-        type: "UPDATE_ITEM",
+        type: "UPDATE",
         id: bumpedItem.id,
         order: bumpedItem.order,
       };
-      if (typeof action.column === "number") {
-        instruction.column === action.column;
-      }
+
       instructions.push(instruction);
 
       return bumpedItem;
@@ -38,19 +48,20 @@ const insertItem = (
     return item;
   });
 
-  const newItem = {
+  let newItem: SortableItem = {
     ...action.item,
-    order: action.order,
-    column: action.column ? action.column : action.item.column,
+    order: newOrder,
   };
-  let instruction: Instruction = {
-    type: "ADD_ITEM",
-    id: newItem.id,
-    order: action.order,
-  };
+
   if (typeof action.column === "number") {
-    instruction.column = action.column;
+    newItem.column = action.column;
   }
+
+  let instruction: Instruction = {
+    type: "INSERT",
+    item: newItem,
+  };
+
   instructions.push(instruction);
 
   newItems = [...newItems, newItem];
@@ -69,7 +80,7 @@ const removeItem = (
 
   if (removedItem) {
     instructions.push({
-      type: "REMOVE_ITEM",
+      type: "REMOVE",
       id: removedItem.id,
     });
 
@@ -88,9 +99,9 @@ const removeItem = (
           };
 
           instructions.push({
-            type: "UPDATE_ITEM",
+            type: "UPDATE",
             id: item.id,
-            order: item.order,
+            order: reducedItem.order,
           });
 
           return reducedItem;
@@ -103,7 +114,7 @@ const removeItem = (
 };
 
 /**
- * Takes an action (insert, remove, move) on the items.
+ * Performs an action (insert, remove, move) on the items.
  */
 export const reorder = (
   items: SortableItem[],
@@ -137,13 +148,12 @@ export const reorder = (
         type: "REMOVE",
         id: action.id,
       });
-      newItems = removeResult;
       allInstructions = [...allInstructions, ...removeInstructions];
 
       let {
         items: insertResult,
         instructions: insertInstructions,
-      } = insertItem(newItems, {
+      } = insertItem(removeResult, {
         type: "INSERT",
         order: action.toOrder,
         column: action.toColumn,
@@ -152,10 +162,33 @@ export const reorder = (
 
       newItems = insertResult;
       allInstructions = [...allInstructions, ...insertInstructions];
+
+      // The INSERT and REMOVE operations above result in
+      // 2 separate instructions. We actually only want
+      // 1 instruction — an UPDATE one. So, we remove those
+      // instructions and insert a new one.
+      allInstructions = allInstructions.filter(
+        (instruction) => instruction.type === "UPDATE"
+      );
+      const insertInstruction = insertInstructions.find(
+        (instruction) => instruction.type === "INSERT"
+      );
+      if (insertInstruction.type === "INSERT") {
+        let moveInstruction: Instruction = {
+          type: "UPDATE",
+          id: movedItem.id,
+          order: insertInstruction.item.order,
+        };
+        if (typeof insertInstruction.item.column === "number") {
+          moveInstruction.column = insertInstruction.item.column;
+        }
+        allInstructions.push(moveInstruction);
+      }
     }
   }
 
   newItems = sortItems(newItems);
+  allInstructions = sortInstructions(newItems, allInstructions);
 
   return { items: newItems, instructions: allInstructions };
 };
@@ -177,4 +210,29 @@ const sortItems = (items: SortableItem[]): SortableItem[] =>
     } else {
       return a.order - b.order;
     }
+  });
+
+const sortInstructions = (
+  sortedItems: SortableItem[],
+  instructions: Instructions
+): Instructions =>
+  [...instructions].sort((a, b) => {
+    let aSortVal = 0;
+    if (a.type === "INSERT") {
+      aSortVal = sortedItems.findIndex((item) => item.id === a.item.id);
+    } else if (a.type === "UPDATE") {
+      aSortVal = sortedItems.findIndex((item) => item.id === a.id);
+    } else {
+      return -1;
+    }
+
+    let bSortVal = 0;
+    if (b.type === "INSERT") {
+      bSortVal = sortedItems.findIndex((item) => item.id === b.item.id);
+    } else if (a.type === "UPDATE") {
+      bSortVal = sortedItems.findIndex((item) => item.id === b.id);
+    } else {
+      return -1;
+    }
+    return aSortVal - bSortVal;
   });
