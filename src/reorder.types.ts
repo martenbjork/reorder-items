@@ -1,4 +1,4 @@
-type ID = string;
+export type ID = string;
 
 export type SortableItem = {
   id: ID;
@@ -7,9 +7,14 @@ export type SortableItem = {
   [x: string]: any;
 };
 
+export type IdItem = {
+  id: ID;
+  [x: string]: any;
+};
+
 export type InsertAction = {
   type: "INSERT";
-  item: SortableItem;
+  item: IdItem;
   order: number;
   column?: number;
 };
@@ -28,27 +33,25 @@ export type MoveAction = {
 
 export type Action = InsertAction | RemoveAction | MoveAction;
 
-export type AddInstruction = {
-  type: "ADD_ITEM";
-  id: ID;
-  order: number;
-  column?: number;
+export type InsertInstruction = {
+  type: "INSERT";
+  item: SortableItem;
 };
 
 export type UpdateInstruction = {
-  type: "UPDATE_ITEM";
+  type: "UPDATE";
   id: ID;
   order: number;
   column?: number;
 };
 
 export type RemoveInstruction = {
-  type: "REMOVE_ITEM";
+  type: "REMOVE";
   id: ID;
 };
 
 export type Instruction =
-  | AddInstruction
+  | InsertInstruction
   | UpdateInstruction
   | RemoveInstruction;
 export type Instructions = Instruction[];
