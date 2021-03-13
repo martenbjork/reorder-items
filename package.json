@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsc src/reorder.ts -outDir build",
-    "measure-performance": "yarn run ts-node performanceTest.ts"
+    "generate-docs": "ts-node ./buildDocs.ts",
+    "measure-performance": "yarn run ts-node ./performance/measure.ts"
   },
   "repository": {
     "type": "git",

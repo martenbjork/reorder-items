@@ -1,5 +1,10 @@
-import { reorder } from "./src/reorder";
-import { Action, SortableItem } from "./src/reorder.types";
+import { reorder } from "../src/reorder";
+import { Action, SortableItem } from "../src/reorder.types";
+const fs = require("fs");
+
+type Measurement = { name: string; duration: number };
+
+let measurements: Measurement[] = [];
 
 function measurePerformance(runs: number, columns: number, rows: number) {
   let grid: SortableItem[] = [];
@@ -40,12 +45,20 @@ function measurePerformance(runs: number, columns: number, rows: number) {
     const testId = `${runs} ${action.type} operations on a ${columns} x ${rows} grid`;
 
     console.time(testId);
+    const start = process.hrtime.bigint();
     for (var i = 0; i < runs; i++) {
       reorder(grid, action);
     }
+    const end = process.hrtime.bigint();
+    const time = Number(end - start) / 1000 / 1000;
     console.timeEnd(testId);
+    measurements.push({ name: testId, duration: time });
   });
   console.log("\n");
+  fs.writeFileSync(
+    "./performance/generated/results.json",
+    JSON.stringify(measurements)
+  );
 }
 
 // Increasing number of runs
