@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc src/reorder.ts -outDir build",
-    "generate-docs": "ts-node ./buildDocs.ts",
-    "measure-performance": "yarn run ts-node ./performance/measure.ts"
+    "build": "tsc && cp -r ./build ./docs/",
+    "generate-docs": "yarn measure-performance && ts-node ./buildDocs.ts",
+    "docs-dev": "concurrently \"yarn docs-watch\" \"yarn docs-server\"",
+    "docs-server": "http-server ./docs",
+    "docs-watch": "yarn tsc ./docs/app.ts --lib esnext,DOM --module esnext --target esnext --moduleResolution node --watch"
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,8 @@
     "typescript": "^4.2.3"
   },
   "devDependencies": {
+    "concurrently": "^6.0.0",
+    "http-server": "^0.12.3",
     "ts-node": "^9.1.1"
   }
 }

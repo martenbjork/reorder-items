@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "target": "esnext",
+    "sourceMap": true,
+    "moduleResolution": "Node",
+    "module": "esnext",
+    "lib": ["esnext"]
+  },
+  "include": ["src/reorder.ts"]
+}
