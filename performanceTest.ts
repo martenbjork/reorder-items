@@ -15,6 +15,7 @@ function measurePerformance(runs: number, columns: number, rows: number) {
       type: "INSERT",
       item: {
         id: "Q",
+        order: 0,
       },
       order: 0,
       column: 0,
