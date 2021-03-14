@@ -5,12 +5,16 @@
   "main": "build/cjs/reorder.js",
   "module": "build/esm/reorder.js",
   "types": "build/esm/reorder.d.ts",
+  "files": [
+    "build/"
+  ],
   "scripts": {
     "test": "jest",
     "build": "tsc && yarn tsc -p tsconfig-cjs.json",
     "docs-server": "http-server ./docs-build",
     "docs-build": "yarn docs-build-prep && yarn tsc -p docs/tsconfig.json",
-    "docs-build-prep": "rm -rf docs-build && mkdir -p docs-build/docs && cp docs/index.html docs-build/index.html"
+    "docs-build-prep": "rm -rf docs-build && mkdir -p docs-build/docs && cp docs/index.html docs-build/index.html",
+    "prepublish": "yarn run build"
   },
   "repository": {
     "type": "git",
