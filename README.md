@@ -1,5 +1,7 @@
 # reorder-items
 
+[![Build Status](https://www.travis-ci.com/martenbjork/reorder-items.svg?branch=main)](https://www.travis-ci.com/martenbjork/reorder-items)
+
 https://reorder-items.netlify.app
 
 ### Order
