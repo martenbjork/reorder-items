@@ -131,6 +131,8 @@ type MoveAction = {
 
 ## Example
 
+![Schematic showing how data flows from the UI to the front end and then the back end](./schematic.png)
+
 You have a list with 2 items. You want to add a new item to the beginning of the list.
 
 ```ts
