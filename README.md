@@ -1,6 +1,6 @@
 # reorder-items
 
-https://martenbjork.github.io/reorder-items/
+https://reorder-items.netlify.app
 
 ### Order
 
