@@ -41,28 +41,34 @@ This package gives you a deterministic way to handle it. It's designed to make s
 ## Usage
 
 ```ts
-const { items, instructions } = reorder(myItems, myAction);
+const { items, instructions } = reorder(myItems, action);
 ```
 
-Let's break it down:
+➡️ `items` is an array of objects.
 
-#### Outputs
+➡️ `action` is a redux-like action with information about the change that you want to make.
+
+⬅️ `instructions` contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make:
 
 ```ts
-const { items, instructions } =
+[
+  {
+    type: "INSERT",
+    item: {
+      id: "item-2",
+      title: "Faro",
+    },
+    order: 0,
+  },
+  {
+    type: "UPDATE",
+    id: "item-0",
+    order: 1,
+  },
+];
 ```
 
-- `items` is a brand new array with the correct `order` values. Ready to go!
-- `instructions` contains the changes that need to be made to the original array in order for the `order` values to be correct. If you need to make changes in a database, these instructions tell you exactly what changes to make.
-
-#### Inputs
-
-```
-                              = reorder(myItems, myAction);
-```
-
-- `items` is an array of objects. Each object needs an `id` field and a `order field`.
-- `action` is a redux-like action with information about the change that you want to make.
+⬅️ `items` is a new array with all the changes already applied. Ready to go!
 
 ## Example
 
@@ -82,7 +88,7 @@ const items = [
   },
 ];
 
-const { newItems, instructions } = reorder(items, {
+const { instructions, newItems } = reorder(items, {
   action: "INSERT",
   item: {
     id: "item-2",
@@ -90,30 +96,6 @@ const { newItems, instructions } = reorder(items, {
   },
   order: 0,
 });
-```
-
-`newItems` contains a new array with all the right `order` values.
-
-```ts
-console.log(newItems);
-
-[
-  {
-    id: "item-2",
-    order: 0,
-    title: "Faro",
-  },
-  {
-    id: "item-0",
-    order: 1,
-    title: "Stockholm",
-  },
-  {
-    id: "item-1",
-    order: 2,
-    title: "Ottawa",
-  },
-];
 ```
 
 `instructions` tells you what changes to make to your database or cache or order to end up in the state above.
@@ -139,6 +121,30 @@ console.log(instructions);
     type: "UPDATE",
     id: "item-1",
     order: 2,
+  },
+];
+```
+
+`newItems` contains a new array with all the changes applied.
+
+```ts
+console.log(newItems);
+
+[
+  {
+    id: "item-2",
+    order: 0,
+    title: "Faro",
+  },
+  {
+    id: "item-0",
+    order: 1,
+    title: "Stockholm",
+  },
+  {
+    id: "item-1",
+    order: 2,
+    title: "Ottawa",
   },
 ];
 ```
