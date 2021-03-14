@@ -41,14 +41,15 @@ This package gives you a deterministic way to handle it. It's designed to make s
 ## Usage
 
 ```ts
-const { items, instructions } = reorder(myItems, action);
+const { instructions, items } = reorder(currentItems, action);
+             🌳         🍎                    🍓         🍋
 ```
 
-➡️ `myItems` is an array of objects.
+🍓 `currentItems` is an array of objects.
 
-➡️ `action` is a redux-like action with information about the change that you want to make.
+🍋 `action` is a redux-like action with information about the change that you want to make.
 
-⬅️ `instructions` contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make:
+🌳 `instructions` contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make:
 
 ```ts
 [
@@ -68,7 +69,7 @@ const { items, instructions } = reorder(myItems, action);
 ];
 ```
 
-⬅️ `items` is a new array with all the changes already applied. Ready to go!
+🍎 `items` is a new array with all the changes already applied. Ready to go!
 
 ## Example
 
