@@ -70,25 +70,19 @@ type Instruction =
   | InsertInstruction 
   | RemoveInstruction
   | UpdateInstruction; 
-```
 
-```ts
 type InsertInstruction = {
   type: "INSERT";
   item: OrderedItem;
 };
-```
 
-```ts
 type UpdateInstruction = {
   type: "UPDATE";
   id: ID;
   order: number;
   column?: number;
 };
-```
 
-```ts
 type RemoveInstruction = {
   type: "REMOVE";
   id: ID;
@@ -110,25 +104,19 @@ type Action =
   | InsertAction 
   | RemoveAction 
   | MoveAction;
-```
 
-```ts
 type InsertAction = {
   type: "INSERT";
   item: IdItem;
   order: number;
   column?: number;
 };
-```
 
-```ts
 type RemoveAction = {
   type: "REMOVE";
   id: ID;
 };
-```
 
-```ts
 type MoveAction = {
   type: "MOVE";
   id: ID;
