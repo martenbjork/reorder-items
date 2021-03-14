@@ -74,7 +74,10 @@ type RemoveInstruction = {
 ```
 
 ```ts
-type Instruction = | InsertInstruction | UpdateInstruction | RemoveInstruction;
+type Instruction = 
+  | InsertInstruction 
+  | UpdateInstruction 
+  | RemoveInstruction;
 ```
 
 </td>
