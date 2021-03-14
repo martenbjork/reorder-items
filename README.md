@@ -1,13 +1,15 @@
-# reorder-items
 
-A helpful algorithm for sorting arrays of objects.
+<h1 align="center">reorder-items</h1>
 
-- 0.7kb minified + gzipped
-- No dependencies
+<p align="center">A helpful algorithm for sorting arrays of objects.</p>
 
-Installation: `yarn add reorder` 👉 [How to use it](#Usage)
+<p align="center">0.7kb minified + gzipped &bull; No dependencies &bull; <a href="#usage">How to use it</a></p>
 
-[![Build Status](https://www.travis-ci.com/martenbjork/reorder-items.svg?branch=main)](https://www.travis-ci.com/martenbjork/reorder-items)
+<div align="center">
+    <a href="https://www.travis-ci.com/martenbjork/reorder-items">
+        <img src="https://www.travis-ci.com/martenbjork/reorder-items.svg?branch=main" alt="Build status">
+    </a>
+</div>
 
 ## Use case
 
