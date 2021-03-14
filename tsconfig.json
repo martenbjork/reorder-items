@@ -5,7 +5,8 @@
     "sourceMap": true,
     "moduleResolution": "Node",
     "module": "esnext",
-    "lib": ["esnext"]
+    "lib": ["esnext"],
+    "declaration": true
   },
   "include": ["src/reorder.ts"]
 }
