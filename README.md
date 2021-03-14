@@ -54,8 +54,8 @@ const { instructions, items } = reorder(currentItems, action);
 ```ts
 type Instruction = 
   | InsertInstruction 
-  | UpdateInstruction 
-  | RemoveInstruction;
+  | RemoveInstruction
+  | UpdateInstruction; 
 ```
 
 ```ts
