@@ -1,6 +1,6 @@
 <h1 align="center">reorder-items</h1>
 
-<p align="center">A helpful algorithm for sorting arrays of objects.</p>
+<p align="center">A helpful algorithm for persisting the order of items.</p>
 
 <p align="center">0.7kb minified + gzipped &bull; No dependencies &bull; <a href="#usage">How to use it</a></p>
 
