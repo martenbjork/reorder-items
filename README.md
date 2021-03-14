@@ -45,38 +45,38 @@ const { instructions, items } = reorder(currentItems, action);
 ```
 
  <table>
+ <tbody>
     <tr>
         <td width="25%" valign="top">
             <p><code>instructions</code> contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make.</p>
-            <pre>
+
+```ts
 type InsertInstruction = {
   type: "INSERT";
   item: OrderedItem;
 };
-</pre>
+```
 
-<pre>
+```ts
 type UpdateInstruction = {
   type: "UPDATE";
   id: ID;
   order: number;
   column?: number;
 };
-</pre>
+```
 
-<pre>
+```ts
 type RemoveInstruction = {
   type: "REMOVE";
   id: ID;
 };
-</pre>
+```
 
-<pre>
-type Instruction =
-  | InsertInstruction
-  | UpdateInstruction
-  | RemoveInstruction;
-</pre>
+```ts
+type Instruction = InsertInstruction | UpdateInstruction | RemoveInstruction;
+```
+
 </td>
 <td width="25%" valign="top">
 <p><code>items</code> is a new array with all the changes already applied. Ready to go!</p>
@@ -85,45 +85,41 @@ type Instruction =
 <p><code>currentItems</code> is an array of objects.</p>
 </td>
 <td width="25%" valign="top">
-<p><code>action</code> is a redux-like action with information about the change that you want to make.</p>
-<pre>
+  <p><code>action</code> is a redux-like action with information about the change that you want to make.</p>
 
+```ts
 type InsertAction = {
-type: "INSERT";
-item: IdItem;
-order: number;
-column?: number;
+  type: "INSERT";
+  item: IdItem;
+  order: number;
+  column?: number;
 };
+```
 
-</pre>
-
-<pre>
+```ts
 type RemoveAction = {
   type: "REMOVE";
   id: ID;
 };
-</pre>
+```
 
-<pre>
+```ts
 MoveAction = {
   type: "MOVE";
   id: ID;
   toOrder: number;
   toColumn?: number;
 };
-</pre>
+```
 
-<pre>
-type Action =
-  | InsertAction
-  | RemoveAction
-  | MoveAction;
+```ts
+type Action = InsertAction | RemoveAction | MoveAction;
+```
 
-</pre>
+  </td>
+</tr>
 
-        </td>
-    </tr>
-
+  </tbody>
 </table>
 
 ## Example
