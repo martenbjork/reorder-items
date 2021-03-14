@@ -61,7 +61,7 @@ const { items, instructions } =
                               = reorder(myItems, myAction);
 ```
 
-- `items` is an array of objects. Each object needs and `id` field and a `order field`.
+- `items` is an array of objects. Each object needs an `id` field and a `order field`.
 - `action` is a redux-like action with information about the change that needs to happen.
 
 ## Example
