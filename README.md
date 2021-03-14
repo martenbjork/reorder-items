@@ -38,6 +38,8 @@ Your front end fetches these items through an API and stores them as an array:
 ]
 ```
 
+#### The tricky part
+
 - When an item is added, removed or moved, you need to update the list to reflect the change. Specifically, the `order` value need to be updated correctly.
 
 - Changes need to be made optimistically in the browser cache.
