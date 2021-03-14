@@ -12,7 +12,7 @@
 
 ## Use case
 
-You have an array of objects. Each object contains an `id` and an `order` value.
+You have an array of objects. Each object contains an `id` and an `order` values.
 
 ```ts
 [
@@ -91,7 +91,7 @@ const { newItems, instructions } = reorder(items, {
 });
 ```
 
-`newItems` contains a new array with all the right order values.
+`newItems` contains a new array with all the right `order` values.
 
 ```ts
 console.log(newItems);
