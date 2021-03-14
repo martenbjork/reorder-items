@@ -46,7 +46,12 @@ Your front end fetches these items through an API and stores them as an array:
 
 - They also need to be persisted on the back end.
 
-This package gives you a deterministic way to handle it. It's designed to make sense for humans.
+<div align="center">
+  <p>—</p>
+  <p>This package gives you a deterministic way to handle it.</p> 
+  <p>It's designed to make sense for humans.</p>
+  <p>🌏</p>
+</div>
 
 ## Usage
 
