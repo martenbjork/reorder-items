@@ -46,7 +46,7 @@ const { items, instructions } = reorder(myItems, myAction);
 
 Let's break it down:
 
-### Outputs
+#### Outputs
 
 ```ts
 const { items, instructions } =
@@ -55,14 +55,14 @@ const { items, instructions } =
 - `items` is a brand new array with the correct `order` values. Ready to go!
 - `instructions` contains the changes that need to be made to the original array in order for the `order` values to be correct. If you need to make changes in a database, these instructions tell you exactly what changes to make.
 
-### Inputs
+#### Inputs
 
 ```
                               = reorder(myItems, myAction);
 ```
 
 - `items` is an array of objects. Each object needs an `id` field and a `order field`.
-- `action` is a redux-like action with information about the change that needs to happen.
+- `action` is a redux-like action with information about the change that you want to make.
 
 ## Example
 
@@ -88,6 +88,7 @@ const { newItems, instructions } = reorder(items, {
     id: "item-2",
     title: "Faro",
   },
+  order: 0,
 });
 ```
 
