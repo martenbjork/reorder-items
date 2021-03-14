@@ -120,7 +120,6 @@ describe("Operations on items without 'column' property", () => {
         item: newItem,
         order: -999,
       });
-<<<<<<< HEAD
       expect(orderById(newItems)).toStrictEqual(
         orderById([
           { ...newItem, order: 0 },
@@ -132,17 +131,6 @@ describe("Operations on items without 'column' property", () => {
           { ...itemC, order: 3 },
         ])
       );
-=======
-      expect(newItems).toStrictEqual([
-        { ...newItem, order: 0 },
-        {
-          ...itemA,
-          order: 1,
-        },
-        { ...itemB, order: 2 },
-        { ...itemC, order: 3 },
-      ]);
->>>>>>> main
 
       const expectedInstructions: Instructions = [
         {
@@ -169,13 +157,9 @@ describe("Operations on items without 'column' property", () => {
         },
       ];
 
-<<<<<<< HEAD
       expect(orderById(instructions)).toStrictEqual(
         orderById(expectedInstructions)
       );
-=======
-      expect(instructions).toStrictEqual(expectedInstructions);
->>>>>>> main
     });
 
     test("inserts at order 0", () => {
@@ -185,7 +169,6 @@ describe("Operations on items without 'column' property", () => {
         order: 0,
       });
 
-<<<<<<< HEAD
       expect(orderById(newItems)).toStrictEqual(
         orderById([
           { ...newItem, order: 0 },
@@ -197,17 +180,6 @@ describe("Operations on items without 'column' property", () => {
           { ...itemC, order: 3 },
         ])
       );
-=======
-      expect(newItems).toStrictEqual([
-        { ...newItem, order: 0 },
-        {
-          ...itemA,
-          order: 1,
-        },
-        { ...itemB, order: 2 },
-        { ...itemC, order: 3 },
-      ]);
->>>>>>> main
 
       const expectedInstructions: Instructions = [
         {
@@ -234,13 +206,9 @@ describe("Operations on items without 'column' property", () => {
         },
       ];
 
-<<<<<<< HEAD
       expect(orderById(instructions)).toStrictEqual(
         orderById(expectedInstructions)
       );
-=======
-      expect(instructions).toStrictEqual(expectedInstructions);
->>>>>>> main
     });
 
     test("inserts at order 1", () => {
@@ -250,7 +218,6 @@ describe("Operations on items without 'column' property", () => {
         order: 1,
       });
 
-<<<<<<< HEAD
       expect(orderById(newItems)).toStrictEqual(
         orderById([
           {
@@ -262,17 +229,6 @@ describe("Operations on items without 'column' property", () => {
           { ...itemC, order: 3 },
         ])
       );
-=======
-      expect(newItems).toStrictEqual([
-        {
-          ...itemA,
-          order: 0,
-        },
-        { ...newItem, order: 1 },
-        { ...itemB, order: 2 },
-        { ...itemC, order: 3 },
-      ]);
->>>>>>> main
 
       const expectedInstructions: Instructions = [
         {
@@ -294,13 +250,9 @@ describe("Operations on items without 'column' property", () => {
         },
       ];
 
-<<<<<<< HEAD
       expect(orderById(instructions)).toStrictEqual(
         orderById(expectedInstructions)
       );
-=======
-      expect(instructions).toStrictEqual(expectedInstructions);
->>>>>>> main
     });
 
     test("inserts at order 3", () => {
@@ -509,7 +461,6 @@ describe("Operations on items without 'column' property", () => {
         toOrder: 0,
       });
 
-<<<<<<< HEAD
       expect(orderById(newItems)).toStrictEqual(
         orderById([
           { ...itemC, order: 0 },
@@ -517,13 +468,6 @@ describe("Operations on items without 'column' property", () => {
           { ...itemB, order: 2 },
         ])
       );
-=======
-      expect(newItems).toStrictEqual([
-        { ...itemC, order: 0 },
-        { ...itemA, order: 1 },
-        { ...itemB, order: 2 },
-      ]);
->>>>>>> main
 
       const expectedInstructions: Instructions = [
         {
@@ -543,13 +487,9 @@ describe("Operations on items without 'column' property", () => {
         },
       ];
 
-<<<<<<< HEAD
       expect(orderById(instructions)).toStrictEqual(
         orderById(expectedInstructions)
       );
-=======
-      expect(instructions).toStrictEqual(expectedInstructions);
->>>>>>> main
     });
 
     it("Moves items from top to order 999 (and adjusts order max order + 1)", () => {
@@ -589,7 +529,6 @@ describe("Operations on items without 'column' property", () => {
         toOrder: -1,
       });
 
-<<<<<<< HEAD
       expect(orderById(newItems)).toStrictEqual(
         orderById([
           { ...itemC, order: 0 },
@@ -597,13 +536,6 @@ describe("Operations on items without 'column' property", () => {
           { ...itemB, order: 2 },
         ])
       );
-=======
-      expect(newItems).toStrictEqual([
-        { ...itemC, order: 0 },
-        { ...itemA, order: 1 },
-        { ...itemB, order: 2 },
-      ]);
->>>>>>> main
 
       const expectedInstructions: Instructions = [
         {
@@ -623,13 +555,9 @@ describe("Operations on items without 'column' property", () => {
         },
       ];
 
-<<<<<<< HEAD
       expect(orderById(instructions)).toStrictEqual(
         orderById(expectedInstructions)
       );
-=======
-      expect(instructions).toStrictEqual(expectedInstructions);
->>>>>>> main
     });
   });
 });
@@ -644,7 +572,6 @@ describe("Operations on items with 'column' property", () => {
         order: 0,
       });
 
-<<<<<<< HEAD
       expect(orderById(newItems)).toStrictEqual(
         orderById([
           itemAA,
@@ -656,17 +583,6 @@ describe("Operations on items with 'column' property", () => {
           { ...itemBC, order: 3 },
         ])
       );
-=======
-      expect(newItems).toStrictEqual([
-        itemAA,
-        itemAB,
-        itemAC,
-        { ...newItem, column: 1, order: 0 },
-        { ...itemBA, order: 1 },
-        { ...itemBB, order: 2 },
-        { ...itemBC, order: 3 },
-      ]);
->>>>>>> main
 
       const expectedInstructions: Instructions = [
         {
@@ -694,13 +610,9 @@ describe("Operations on items with 'column' property", () => {
         },
       ];
 
-<<<<<<< HEAD
       expect(orderById(instructions)).toStrictEqual(
         orderById(expectedInstructions)
       );
-=======
-      expect(instructions).toStrictEqual(expectedInstructions);
->>>>>>> main
     });
   });
 
@@ -713,7 +625,6 @@ describe("Operations on items with 'column' property", () => {
         toOrder: 0,
       });
 
-<<<<<<< HEAD
       expect(orderById(newItems)).toStrictEqual(
         orderById(
           orderById([
@@ -726,16 +637,6 @@ describe("Operations on items with 'column' property", () => {
           ])
         )
       );
-=======
-      expect(newItems).toStrictEqual([
-        { ...itemAB, order: 0 },
-        { ...itemAC, order: 1 },
-        { ...itemAA, column: 1, order: 0 },
-        { ...itemBA, order: 1 },
-        { ...itemBB, order: 2 },
-        { ...itemBC, order: 3 },
-      ]);
->>>>>>> main
 
       const expectedInstructions: Instructions = [
         {
@@ -771,13 +672,9 @@ describe("Operations on items with 'column' property", () => {
         },
       ];
 
-<<<<<<< HEAD
       expect(orderById(instructions)).toStrictEqual(
         orderById(expectedInstructions)
       );
-=======
-      expect(instructions).toStrictEqual(expectedInstructions);
->>>>>>> main
     });
 
     // test("Moves items from 1 to column -1 and (adjusts column to 0)", () => {
