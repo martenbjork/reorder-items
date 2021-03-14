@@ -12,7 +12,15 @@
 
 ## Use case
 
-You have an array of objects. Each object contains an `id` and an `order` values.
+Your database stores ordered items:
+```
+ID                                    | Order
+--------------------------------------|------------------------
+af84c0bd-342d-4495-b16d-2aadf3cb74b3  | 0
+e34094bf-e62a-4056-b145-d5698cf8bb9d  | 1
+```
+
+Your front end fetches these items through an API and stores them as an array:
 
 ```ts
 [
