@@ -50,6 +50,14 @@ const { instructions, items } = reorder(currentItems, action);
         <td width="25%" valign="top">
             <p><code>instructions</code> contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make.</p>
 
+
+```ts
+type Instruction = 
+  | InsertInstruction 
+  | UpdateInstruction 
+  | RemoveInstruction;
+```
+
 ```ts
 type InsertInstruction = {
   type: "INSERT";
@@ -73,13 +81,6 @@ type RemoveInstruction = {
 };
 ```
 
-```ts
-type Instruction = 
-  | InsertInstruction 
-  | UpdateInstruction 
-  | RemoveInstruction;
-```
-
 </td>
 <td width="25%" valign="top">
 <p><code>items</code> is a new array with all the changes already applied. Ready to go!</p>
@@ -89,6 +90,13 @@ type Instruction =
 </td>
 <td width="25%" valign="top">
   <p><code>action</code> is a redux-like action with information about the change that you want to make.</p>
+
+```ts
+type Action = 
+  | InsertAction 
+  | RemoveAction 
+  | MoveAction;
+```
 
 ```ts
 type InsertAction = {
@@ -113,13 +121,6 @@ type MoveAction = {
   toOrder: number;
   toColumn?: number;
 };
-```
-
-```ts
-type Action = 
-  | InsertAction 
-  | RemoveAction 
-  | MoveAction;
 ```
 
   </td>
