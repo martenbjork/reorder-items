@@ -2,12 +2,14 @@
   "name": "reorder-items",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/cjs/reorder.js",
+  "module": "build/esm/reorder.js",
+  "types": "build/esm/reorder.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "tsc && cp -r ./build ./docs/",
+    "build": "tsc && yarn tsc -p tsconfig-cjs.json",
     "docs-server": "http-server ./docs-build",
-    "docs-build": "yarn docs-build-prep && yarn tsc --project docs/tsconfig.json",
+    "docs-build": "yarn docs-build-prep && yarn tsc -p docs/tsconfig.json",
     "docs-build-prep": "rm -rf docs-build && mkdir -p docs-build/docs && cp docs/index.html docs-build/index.html"
   },
   "repository": {

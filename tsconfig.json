@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "build/esm",
     "target": "esnext",
     "sourceMap": true,
     "moduleResolution": "Node",
