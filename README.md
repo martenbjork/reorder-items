@@ -48,17 +48,82 @@ const { instructions, items } = reorder(currentItems, action);
     <tr>
         <td width="25%" valign="top">
             <p><code>instructions</code> contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make.</p>
-        </td>
-        <td width="25%" valign="top">
-            <p><code>items</code> is a new array with all the changes already applied. Ready to go!</p>
-        </td>
-        <td width="25%" valign="top">
-            <p><code>currentItems</code> is an array of objects. </p>
-        </td>
-        <td width="25%" valign="top">
-            <p><code>action</code> is a redux-like action with information about the change that you want to make.</p>
+            <pre>
+type InsertInstruction = {
+  type: "INSERT";
+  item: OrderedItem;
+};
+</pre>
+
+<pre>
+type UpdateInstruction = {
+  type: "UPDATE";
+  id: ID;
+  order: number;
+  column?: number;
+};
+</pre>
+
+<pre>
+type RemoveInstruction = {
+  type: "REMOVE";
+  id: ID;
+};
+</pre>
+
+<pre>
+type Instruction =
+  | InsertInstruction
+  | UpdateInstruction
+  | RemoveInstruction;
+</pre>
+</td>
+<td width="25%" valign="top">
+<p><code>items</code> is a new array with all the changes already applied. Ready to go!</p>
+</td>
+<td width="25%" valign="top">
+<p><code>currentItems</code> is an array of objects.</p>
+</td>
+<td width="25%" valign="top">
+<p><code>action</code> is a redux-like action with information about the change that you want to make.</p>
+<pre>
+
+type InsertAction = {
+type: "INSERT";
+item: IdItem;
+order: number;
+column?: number;
+};
+
+</pre>
+
+<pre>
+type RemoveAction = {
+  type: "REMOVE";
+  id: ID;
+};
+</pre>
+
+<pre>
+MoveAction = {
+  type: "MOVE";
+  id: ID;
+  toOrder: number;
+  toColumn?: number;
+};
+</pre>
+
+<pre>
+type Action =
+  | InsertAction
+  | RemoveAction
+  | MoveAction;
+
+</pre>
+
         </td>
     </tr>
+
 </table>
 
 ## Example

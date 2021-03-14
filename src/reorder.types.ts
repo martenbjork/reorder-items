@@ -54,4 +54,5 @@ export type Instruction =
   | InsertInstruction
   | UpdateInstruction
   | RemoveInstruction;
+
 export type Instructions = Instruction[];
