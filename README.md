@@ -57,8 +57,8 @@ const { instructions, items }  =  reorder(currentItems, action);
  <table>
  <tbody>
  <tr>
- <th colspan="2"><div align="center">What reorder() returns</div></th>
- <th colspan="2"><div align="center">Your inputs</div></th>
+ <th colspan="2"><div align="center">What reorder() returns 👆</div></th>
+ <th colspan="2"><div align="center">👆 Your inputs</div></th>
  </tr>
     <tr>
         <td width="25%" valign="top">
