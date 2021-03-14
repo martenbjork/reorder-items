@@ -42,34 +42,11 @@ This package gives you a deterministic way to handle it. It's designed to make s
 
 ```ts
 const { instructions, items } = reorder(currentItems, action);
-             🌳         🍎                    🍓         🍋
+             🌳        🍎                   🍓         🍋
 ```
-
-🍓 `currentItems` is an array of objects.
-
-🍋 `action` is a redux-like action with information about the change that you want to make.
-
-🌳 `instructions` contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make:
-
-```ts
-[
-  {
-    type: "INSERT",
-    item: {
-      id: "item-2",
-      title: "Faro",
-    },
-    order: 0,
-  },
-  {
-    type: "UPDATE",
-    id: "item-0",
-    order: 1,
-  },
-];
-```
-
-🍎 `items` is a new array with all the changes already applied. Ready to go!
+🌳|🍎 |🍓|🍋
+---|---|---|---
+ `instructions` contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make. | `items` is a new array with all the changes already applied. Ready to go!|`currentItems` is an array of objects. | `action` is a redux-like action with information about the change that you want to make.
 
 ## Example
 
