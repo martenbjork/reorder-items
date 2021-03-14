@@ -49,7 +49,7 @@ This package gives you a deterministic way to handle it. It's designed to make s
 ## Usage
 
 <pre align="center">
-const { instructions, items } = reorder(currentItems, action);
+const { instructions, items }  =  reorder(currentItems, action);
 </pre>
 
  <table>
