@@ -46,6 +46,10 @@ const { instructions, items } = reorder(currentItems, action);
 
  <table>
  <tbody>
+ <tr>
+ <th colspan="2"><div align="center">Outputs</div></th>
+ <th colspan="2"><div align="center">Inputs</div></th>
+ </tr>
     <tr>
         <td width="25%" valign="top">
             <p><code>instructions</code> contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make.</p>
