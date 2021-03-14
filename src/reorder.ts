@@ -7,11 +7,7 @@ import {
   Instructions,
 } from "./reorder.types";
 
-<<<<<<< HEAD
 function clampOrder(items: SortableItem[], order: number): number {
-=======
-const clampOrder = (items: SortableItem[], order: number): number => {
->>>>>>> main
   let newOrder = order;
   if (newOrder < 0) {
     newOrder = 0;
@@ -19,15 +15,9 @@ const clampOrder = (items: SortableItem[], order: number): number => {
     newOrder = items.length;
   }
   return newOrder;
-<<<<<<< HEAD
 }
 
 function insertItem(
-=======
-};
-
-const insertItem = (
->>>>>>> main
   items: SortableItem[],
   action: InsertAction
 ): { items: SortableItem[]; instructions: Instructions } {
@@ -35,11 +25,7 @@ const insertItem = (
 
   let newOrder = clampOrder(items, action.order);
 
-<<<<<<< HEAD
   let newItems = [...items].map(function bumpAndCreateUpdateInstruction(item) {
-=======
-  let newItems = [...items].map((item) => {
->>>>>>> main
     const itemIsInColumn =
       typeof action.column === "number" ? item.column === action.column : true;
 
@@ -203,13 +189,8 @@ export function reorder(
     }
   }
 
-<<<<<<< HEAD
   // newItems = sortItems(newItems);
   // allInstructions = sortInstructions(newItems, allInstructions);
-=======
-  newItems = sortItems(newItems);
-  allInstructions = sortInstructions(newItems, allInstructions);
->>>>>>> main
 
   return { items: newItems, instructions: allInstructions };
 }
@@ -232,7 +213,6 @@ function sortItems(items: SortableItem[]): SortableItem[] {
       return a.order - b.order;
     }
   });
-<<<<<<< HEAD
 }
 
 function sortInstructions(
@@ -240,14 +220,6 @@ function sortInstructions(
   instructions: Instructions
 ): Instructions {
   return [...instructions].sort((a, b) => {
-=======
-
-const sortInstructions = (
-  sortedItems: SortableItem[],
-  instructions: Instructions
-): Instructions =>
-  [...instructions].sort((a, b) => {
->>>>>>> main
     let aSortVal = 0;
     if (a.type === "INSERT") {
       aSortVal = sortedItems.findIndex((item) => item.id === a.item.id);
@@ -267,7 +239,4 @@ const sortInstructions = (
     }
     return aSortVal - bSortVal;
   });
-<<<<<<< HEAD
 }
-=======
->>>>>>> main
