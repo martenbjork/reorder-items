@@ -1,17 +1,9 @@
-## New items
+# reorder-items
 
-https://martenbjork.github.io/reorder-items/
+[![Build Status](https://www.travis-ci.com/martenbjork/reorder-items.svg?branch=main)](https://www.travis-ci.com/martenbjork/reorder-items)
 
-### Order
-
-Items are returned the following order:
-
-- First, they are sorted by `column` (if present)
-- Secondly, they are sorted by `order`
-
-## Instructions
+https://reorder-items.netlify.app
 
 ### Order
 
-- Updates first. Ordered by their new order/column values (see above)
-- Insert/Remove instructions at the end
+Items and instructions may be returned in any order. This allows the underlying algoritm to simply ignore the order of the results and instead optimize for speed.

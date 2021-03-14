@@ -1,30 +1,39 @@
-<h2>Performance:</h2>
-<ul>
-  <li>1 MOVE operations on a 100 x 100 grid: 8.391833</li>
-  <li>1 INSERT operations on a 100 x 100 grid: 12.239958</li>
-  <li>1 REMOVE operations on a 100 x 100 grid: 9.6195</li>
-  <li>1 MOVE operations on a 100 x 100 grid: 2.455625</li>
-  <li>1 INSERT operations on a 100 x 100 grid: 5.251417</li>
-  <li>1 REMOVE operations on a 100 x 100 grid: 7.30675</li>
-  <li>1 MOVE operations on a 10 x 100 grid: 4.891959</li>
-  <li>1 INSERT operations on a 10 x 100 grid: 1.287791</li>
-  <li>1 REMOVE operations on a 10 x 100 grid: 2.030375</li>
-  <li>1 MOVE operations on a 100 x 100 grid: 1.683375</li>
-  <li>1 INSERT operations on a 100 x 100 grid: 2.942042</li>
-  <li>1 REMOVE operations on a 100 x 100 grid: 5.861375</li>
-  <li>1 MOVE operations on a 1000 x 100 grid: 18.326667</li>
-  <li>1 INSERT operations on a 1000 x 100 grid: 32.310917</li>
-  <li>1 REMOVE operations on a 1000 x 100 grid: 56.743833</li>
-  <li>1 MOVE operations on a 100 x 10 grid: 0.158375</li>
-  <li>1 INSERT operations on a 100 x 10 grid: 0.27133300000000005</li>
-  <li>1 REMOVE operations on a 100 x 10 grid: 0.384958</li>
-  <li>1 MOVE operations on a 100 x 100 grid: 1.463042</li>
-  <li>1 INSERT operations on a 100 x 100 grid: 2.721167</li>
-  <li>1 REMOVE operations on a 100 x 100 grid: 5.56175</li>
-  <li>1 MOVE operations on a 100 x 1000 grid: 66.108</li>
-  <li>1 INSERT operations on a 100 x 1000 grid: 81.453584</li>
-  <li>1 REMOVE operations on a 100 x 1000 grid: 212.663792</li>
-  <li>1 MOVE operations on a 250 x 20 grid: 0.7941670000000001</li>
-  <li>1 INSERT operations on a 250 x 20 grid: 2.922583</li>
-  <li>1 REMOVE operations on a 250 x 20 grid: 2.350375</li>
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>reorder-items</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+      #results {
+        font-size: 10px;
+      }
+      #results li span {
+        display: inline-block;
+      }
+      #results li span:nth-child(1) {
+        min-width: 15em;
+      }
+      #results li span:nth-child(2) {
+        min-width: 6em;
+      }
+      #results li span:nth-child(3) {
+        background: black;
+        border-radius: 2px;
+        height: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Reorder items</h2>
+    <h3>Performance</h3>
+    <button id="run">Run tests in browser (open dev tools)</button>
+    <div id="results"></div>
+    <script type="module" src="/docs/app.js"></script>
+  </body>
+</html>

@@ -7,7 +7,7 @@ import {
   Instructions,
 } from "./reorder.types";
 
-const clampOrder = (items: SortableItem[], order: number): number => {
+function clampOrder(items: SortableItem[], order: number): number {
   let newOrder = order;
   if (newOrder < 0) {
     newOrder = 0;
@@ -15,17 +15,17 @@ const clampOrder = (items: SortableItem[], order: number): number => {
     newOrder = items.length;
   }
   return newOrder;
-};
+}
 
-const insertItem = (
+function insertItem(
   items: SortableItem[],
   action: InsertAction
-): { items: SortableItem[]; instructions: Instructions } => {
+): { items: SortableItem[]; instructions: Instructions } {
   let instructions: Instruction[] = [];
 
   let newOrder = clampOrder(items, action.order);
 
-  let newItems = [...items].map((item) => {
+  let newItems = [...items].map(function bumpAndCreateUpdateInstruction(item) {
     const itemIsInColumn =
       typeof action.column === "number" ? item.column === action.column : true;
 
@@ -67,12 +67,12 @@ const insertItem = (
   newItems = [...newItems, newItem];
 
   return { items: newItems, instructions };
-};
+}
 
-const removeItem = (
+function removeItem(
   items: SortableItem[],
   action: RemoveAction
-): { items: SortableItem[]; instructions: Instructions } => {
+): { items: SortableItem[]; instructions: Instructions } {
   let instructions: Instruction[] = [];
   let newItems = [...items];
 
@@ -86,7 +86,7 @@ const removeItem = (
 
     newItems = newItems
       .filter((item) => item.id !== action.id)
-      .map((item) => {
+      .map(function reduceAndCreateUpdateInstruction(item) {
         const itemIsInColumn =
           typeof removedItem.column === "number"
             ? item.column === removedItem.column
@@ -111,15 +111,15 @@ const removeItem = (
   }
 
   return { items: newItems, instructions };
-};
+}
 
 /**
  * Performs an action (insert, remove, move) on the items.
  */
-export const reorder = (
+export function reorder(
   items: SortableItem[],
   action: Action
-): { items: SortableItem[]; instructions: Instructions } => {
+): { items: SortableItem[]; instructions: Instructions } {
   let allInstructions: Instructions = [];
   let newItems = [...items];
 
@@ -138,7 +138,9 @@ export const reorder = (
 
   // If MOVE, first do a REMOVE, then an INSERT
   else if (action.type === "MOVE") {
-    const movedItem = items.find((item) => item.id === action.id);
+    const movedItem = items.find(function findMovedItem(item) {
+      return item.id === action.id;
+    });
 
     if (movedItem) {
       let {
@@ -187,14 +189,14 @@ export const reorder = (
     }
   }
 
-  newItems = sortItems(newItems);
-  allInstructions = sortInstructions(newItems, allInstructions);
+  // newItems = sortItems(newItems);
+  // allInstructions = sortInstructions(newItems, allInstructions);
 
   return { items: newItems, instructions: allInstructions };
-};
+}
 
-const sortItems = (items: SortableItem[]): SortableItem[] =>
-  [...items].sort((a, b) => {
+function sortItems(items: SortableItem[]): SortableItem[] {
+  return [...items].sort((a, b) => {
     if (
       typeof a.column === "number" &&
       typeof b.column === "number" &&
@@ -211,12 +213,13 @@ const sortItems = (items: SortableItem[]): SortableItem[] =>
       return a.order - b.order;
     }
   });
+}
 
-const sortInstructions = (
+function sortInstructions(
   sortedItems: SortableItem[],
   instructions: Instructions
-): Instructions =>
-  [...instructions].sort((a, b) => {
+): Instructions {
+  return [...instructions].sort((a, b) => {
     let aSortVal = 0;
     if (a.type === "INSERT") {
       aSortVal = sortedItems.findIndex((item) => item.id === a.item.id);
@@ -236,3 +239,4 @@ const sortInstructions = (
     }
     return aSortVal - bSortVal;
   });
+}
