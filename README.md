@@ -1,4 +1,3 @@
-
 <h1 align="center">reorder-items</h1>
 
 <p align="center">A helpful algorithm for sorting arrays of objects.</p>
@@ -15,7 +14,7 @@
 
 You have an array of objects. Each object contains an `id` and an `order` value.
 
-```
+```ts
 [
     {
         id: "item-0",
@@ -25,21 +24,123 @@ You have an array of objects. Each object contains an `id` and an `order` value.
     {
         id: "item-1",
         order: 1,
-        title: "Stockholm"
+        title: "Ottawa"
     },
     ...
 ]
 ```
 
-- When an item is added, removed or moved in this list, you need to update the list to reflect the change. Specifically, the `order` value need to be updated correctly.
+- When an item is added, removed or moved, you need to update the list to reflect the change. Specifically, the `order` value need to be updated correctly.
 
 - Changes need to be made optimistically in the browser cache.
 
-- They need to be persisted on the back end.
+- They also need to be persisted on the back end.
 
-This package gives you a deterministic way to handle it.
+This package gives you a deterministic way to handle it. It's designed to make sense for humans.
 
 ## Usage
+
+```ts
+const { items, instructions } = reorder(myItems, myAction);
+```
+
+Let's break it down:
+
+### Outputs
+
+```ts
+const { items, instructions } =
+```
+
+- `items` is a brand new array with the correct `order` values. Ready to go!
+- `instructions` contains the changes that need to be made to the original array in order for the `order` values to be correct. If you need to make changes in a database, these instructions tell you exactly what changes to make.
+
+### Inputs
+
+```
+                              = reorder(myItems, myAction);
+```
+
+- `items` is an array of objects. Each object needs and `id` field and a `order field`.
+- `action` is a redux-like action with information about the change that needs to happen.
+
+## Example
+
+You have a list with 2 items. You want to add a new item to the beginning of the list.
+
+```ts
+const items = [
+  {
+    id: "item-0",
+    order: 0,
+    title: "Stockholm",
+  },
+  {
+    id: "item-1",
+    order: 1,
+    title: "Ottawa",
+  },
+];
+
+const { newItems, instructions } = reorder(items, {
+  action: "INSERT",
+  item: {
+    id: "item-2",
+    title: "Faro",
+  },
+});
+```
+
+`newItems` contains a new array with all the right order values.
+
+```ts
+console.log(newItems);
+
+[
+  {
+    id: "item-2",
+    order: 0,
+    title: "Faro",
+  },
+  {
+    id: "item-0",
+    order: 1,
+    title: "Stockholm",
+  },
+  {
+    id: "item-1",
+    order: 2,
+    title: "Ottawa",
+  },
+];
+```
+
+`instructions` tells you what changes to make to your database or cache or order to end up in the state above.
+
+```ts
+console.log(instructions);
+
+[
+  {
+    type: "INSERT",
+    item: {
+      id: "item-2",
+      title: "Faro",
+    },
+    order: 0,
+  },
+  {
+    type: "UPDATE",
+    id: "item-0",
+    order: 1,
+  },
+  {
+    type: "UPDATE",
+    id: "item-1",
+    order: 2,
+  },
+];
+```
 
 ## Details
 
