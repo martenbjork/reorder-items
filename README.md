@@ -1,6 +1,6 @@
 <h1 align="center">reorder-items</h1>
 
-<p align="center">A helpful algorithm for sorting arrays of objects.</p>
+<p align="center">A helpful algorithm for persisting the order of items.</p>
 
 <p align="center">0.7kb minified + gzipped &bull; No dependencies &bull; <a href="#usage">How to use it</a></p>
 
@@ -12,7 +12,15 @@
 
 ## Use case
 
-You have an array of objects. Each object contains an `id` and an `order` values.
+Your database stores ordered items:
+```
+ID                                    | Order
+--------------------------------------|------------------------
+af84c0bd-342d-4495-b16d-2aadf3cb74b3  | 0
+e34094bf-e62a-4056-b145-d5698cf8bb9d  | 1
+```
+
+Your front end fetches these items through an API and stores them as an array:
 
 ```ts
 [
