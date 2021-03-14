@@ -1,5 +1,5 @@
 import {
-  SortableItem,
+  OrderedItem,
   InsertAction,
   RemoveAction,
   Action,
@@ -7,7 +7,7 @@ import {
   Instructions,
 } from "./reorder.types";
 
-function clampOrder(items: SortableItem[], order: number): number {
+function clampOrder(items: OrderedItem[], order: number): number {
   let newOrder = order;
   if (newOrder < 0) {
     newOrder = 0;
@@ -18,9 +18,9 @@ function clampOrder(items: SortableItem[], order: number): number {
 }
 
 function insertItem(
-  items: SortableItem[],
+  items: OrderedItem[],
   action: InsertAction
-): { items: SortableItem[]; instructions: Instructions } {
+): { items: OrderedItem[]; instructions: Instructions } {
   let instructions: Instruction[] = [];
 
   let newOrder = clampOrder(items, action.order);
@@ -48,7 +48,7 @@ function insertItem(
     return item;
   });
 
-  let newItem: SortableItem = {
+  let newItem: OrderedItem = {
     ...action.item,
     order: newOrder,
   };
@@ -70,9 +70,9 @@ function insertItem(
 }
 
 function removeItem(
-  items: SortableItem[],
+  items: OrderedItem[],
   action: RemoveAction
-): { items: SortableItem[]; instructions: Instructions } {
+): { items: OrderedItem[]; instructions: Instructions } {
   let instructions: Instruction[] = [];
   let newItems = [...items];
 
@@ -117,9 +117,9 @@ function removeItem(
  * Performs an action (insert, remove, move) on the items.
  */
 export function reorder(
-  items: SortableItem[],
+  items: OrderedItem[],
   action: Action
-): { items: SortableItem[]; instructions: Instructions } {
+): { items: OrderedItem[]; instructions: Instructions } {
   let allInstructions: Instructions = [];
   let newItems = [...items];
 
@@ -195,7 +195,7 @@ export function reorder(
   return { items: newItems, instructions: allInstructions };
 }
 
-function sortItems(items: SortableItem[]): SortableItem[] {
+function sortItems(items: OrderedItem[]): OrderedItem[] {
   return [...items].sort((a, b) => {
     if (
       typeof a.column === "number" &&
@@ -216,7 +216,7 @@ function sortItems(items: SortableItem[]): SortableItem[] {
 }
 
 function sortInstructions(
-  sortedItems: SortableItem[],
+  sortedItems: OrderedItem[],
   instructions: Instructions
 ): Instructions {
   return [...instructions].sort((a, b) => {

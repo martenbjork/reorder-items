@@ -1,63 +1,63 @@
 import { reorder } from "./reorder";
-import { IdItem, Instructions, SortableItem } from "./reorder.types";
+import { IdItem, Instructions, OrderedItem } from "./reorder.types";
 const orderBy = require("lodash.orderby");
 
 const orderById = <T>(items: T[]): T[] => orderBy(items, ["id"]);
 
-const itemA: SortableItem = {
+const itemA: OrderedItem = {
   id: "A",
   order: 0,
   extraField: "lorem",
 };
 
-const itemB: SortableItem = {
+const itemB: OrderedItem = {
   id: "B",
   order: 1,
   extraField: "ipsum",
 };
 
-const itemC: SortableItem = {
+const itemC: OrderedItem = {
   id: "C",
   order: 2,
   extraField: "dolor",
 };
 
-const itemAA: SortableItem = {
+const itemAA: OrderedItem = {
   id: "AA",
   column: 0,
   order: 0,
   extraField: "lorem",
 };
 
-const itemAB: SortableItem = {
+const itemAB: OrderedItem = {
   id: "AB",
   column: 0,
   order: 1,
   extraField: "ipsum",
 };
 
-const itemAC: SortableItem = {
+const itemAC: OrderedItem = {
   id: "AC",
   column: 0,
   order: 2,
   extraField: "dolor",
 };
 
-const itemBA: SortableItem = {
+const itemBA: OrderedItem = {
   id: "BA",
   column: 1,
   order: 0,
   extraField: "et",
 };
 
-const itemBB: SortableItem = {
+const itemBB: OrderedItem = {
   id: "BB",
   column: 1,
   order: 1,
   extraField: "amet",
 };
 
-const itemBC: SortableItem = {
+const itemBC: OrderedItem = {
   id: "BC",
   column: 1,
   order: 2,
@@ -69,8 +69,8 @@ const newItem: IdItem = {
   extraField: "Hello",
 };
 
-let items: SortableItem[] = [itemA, itemB, itemC];
-let itemsInColumns: SortableItem[] = [
+let items: OrderedItem[] = [itemA, itemB, itemC];
+let itemsInColumns: OrderedItem[] = [
   itemAA,
   itemAB,
   itemAC,
