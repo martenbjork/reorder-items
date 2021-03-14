@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "outDir": "../docs-build",
+    "target": "ESNext",
+    "sourceMap": true,
+    "moduleResolution": "Node",
+    "module": "esnext",
+    "lib": ["esnext", "DOM"]
+  },
+  "include": ["./app.ts"]
+}
