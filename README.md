@@ -16,17 +16,17 @@ You have an array of objects. Each object contains an `id` and an `order` values
 
 ```ts
 [
-    {
-        id: "item-0",
-        order: 0,
-        title: "Stockholm"
-    },
-    {
-        id: "item-1",
-        order: 1,
-        title: "Ottawa"
-    },
+  {
+    id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
+    order: 0,
     ...
+  },
+  {
+    id: "e34094bf-e62a-4056-b145-d5698cf8bb9d",
+    order: 1,
+    ...
+  },
+  ...
 ]
 ```
 
@@ -107,7 +107,7 @@ type RemoveAction = {
 ```
 
 ```ts
-MoveAction = {
+type MoveAction = {
   type: "MOVE";
   id: ID;
   toOrder: number;
