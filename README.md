@@ -256,11 +256,14 @@ Because `reorder` took care of the logic, the `cities` state now contains the ri
 The updated list is now reflected in the UI, but we still need to persist the order to the back end. We send an API request to the `addCity` endpoint. 
 
 ```ts
-POST /api/addCity
-
-data: {
-  id, title, order
-}
+request({
+  endpoint: '/api/addCity',
+  data: {
+    id,
+    title, 
+    order
+  }
+});
 ```
 
 On the server, a resolver handles the request. It too uses the `order` function that we already used on the front end.
