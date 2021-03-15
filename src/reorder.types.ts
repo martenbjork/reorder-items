@@ -1,6 +1,6 @@
 export type ID = string;
 
-export type SortableItem = {
+export type OrderedItem = {
   id: ID;
   order: number;
   column?: number;
@@ -35,7 +35,7 @@ export type Action = InsertAction | RemoveAction | MoveAction;
 
 export type InsertInstruction = {
   type: "INSERT";
-  item: SortableItem;
+  item: OrderedItem;
 };
 
 export type UpdateInstruction = {
@@ -54,4 +54,5 @@ export type Instruction =
   | InsertInstruction
   | UpdateInstruction
   | RemoveInstruction;
+
 export type Instructions = Instruction[];

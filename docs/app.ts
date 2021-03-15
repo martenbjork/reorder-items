@@ -1,4 +1,4 @@
-import { Action, SortableItem } from "../src/reorder.types.js";
+import { Action, OrderedItem } from "../src/reorder.types.js";
 import { reorder } from "../src/reorder.js";
 
 const NUMBER_OF_RUNS_PER_TEST = 3;
@@ -6,7 +6,7 @@ const START_MARKER = "runTest started";
 const END_MARKER = "runTest ended";
 
 function runTest(numberOfItems: number, action: Action) {
-  const items: SortableItem[] = [];
+  const items: OrderedItem[] = [];
 
   for (var i = 0; i < numberOfItems; i++) {
     items.push({
