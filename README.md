@@ -12,7 +12,11 @@
 
 ## Use case
 
-Your database stores ordered items:
+You're building a UI with lists. Users can change the order of items in the lists. (Trello, Todoist...) 
+
+![Schematic showing how data flows from the UI to the front end and then the back end](./ui-example.png)
+
+Your database stores the items along with an `order` field:
 ```
 ID                                    | Order
 --------------------------------------|------------------------
@@ -20,7 +24,7 @@ af84c0bd-342d-4495-b16d-2aadf3cb74b3  | 0
 e34094bf-e62a-4056-b145-d5698cf8bb9d  | 1
 ```
 
-Your front end fetches these items through an API and stores them as an array:
+Your front end fetches these items and stores them as state:
 
 ```ts
 [
@@ -40,18 +44,13 @@ Your front end fetches these items through an API and stores them as an array:
 
 #### The tricky part
 
-- When an item is added, removed or moved, you need to update the list to reflect the change. Specifically, the `order` value need to be updated correctly.
+- When an item is added, removed or moved, you want to adjust the items in the array. The `order` values need to be updated and items need to be removed or added.
 
-- Changes need to be made optimistically in the browser cache.
+- These changes need to be instantaneous in the state & UI.
 
 - They also need to be persisted on the back end.
 
-<div align="center">
-  <p>—</p>
-  <p>This package gives you a deterministic way to handle it.</p> 
-  <p>It's designed to make sense for humans.</p>
-  <p>🌏</p>
-</div>
+<strong>🌸 This package helps you implement this logic without headaches.</strong>
 
 ## Usage
 
