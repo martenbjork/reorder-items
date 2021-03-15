@@ -102,7 +102,7 @@ type RemoveInstruction = {
 <p><code>currentItems</code> is an array of objects.</p>
 </td>
 <td width="25%" valign="top">
-  <p><code>action</code> is a redux-like action that expressed the change that you want to make to the list.</p>
+  <p><code>action</code> is a redux-like action that expresses the change that you want to make to the list.</p>
 
 ```ts
 type Action = 
