@@ -44,11 +44,16 @@ Your front end fetches these items and stores them as state:
 
 #### The tricky part
 
-- When an item is added, removed or moved, you want to adjust the items in the array. The `order` values need to be updated and items need to be removed or added.
+- When an item is added, removed or moved this all the above needs to be re-calculated:
+    - Adding items: The new item needs a correct `order` value. Items below need to have their `order` value increased since they are moved down by 1.
+    - Removing an item: Suddenly there is a gap in the `order` sequence. Remaining items need to have their `order` re-computed.
+    - Moving items: All items below the new one needs new `order` values since they were moved too (as a side effect).
 
 - These changes need to be instantaneous in the state & UI.
 
 - They also need to be persisted on the back end.
+
+- This logic needs to be predictable and rock solid so that the UI and back end has the same `order` values.
 
 <strong>🌸 This package helps you implement this logic without headaches.</strong>
 
