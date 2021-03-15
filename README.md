@@ -268,8 +268,6 @@ request({
 
 On the server, a resolver handles the request. It too uses the `order` function that we already used on the front end.
 
-Because you can't write JavaScript objects directly to the database, we use the `instructions` array to figure out what changes we need to make to the database.
-
 ```ts
 const addCityResolver = (args: MutationArgs) => {
   // Fetch the existing items
@@ -283,7 +281,9 @@ const addCityResolver = (args: MutationArgs) => {
   };
 
   // Run the same function that we ran on the front end.
-  // However, this time, retrieve the 'instructions'.
+  // Because we can't write JavaScript objects directly
+  // to the database, we use the `instructions` to figure
+  // out what changes we need to make to the database.
   const { instructions } = reorder(cities, action);
 
   // Loop through the instructions
