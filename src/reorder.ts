@@ -189,54 +189,5 @@ export function reorder(
     }
   }
 
-  // newItems = sortItems(newItems);
-  // allInstructions = sortInstructions(newItems, allInstructions);
-
   return { items: newItems, instructions: allInstructions };
-}
-
-function sortItems(items: OrderedItem[]): OrderedItem[] {
-  return [...items].sort((a, b) => {
-    if (
-      typeof a.column === "number" &&
-      typeof b.column === "number" &&
-      a.column > b.column
-    ) {
-      return 1;
-    } else if (
-      typeof a.column === "number" &&
-      typeof b.column === "number" &&
-      a.column < b.column
-    ) {
-      return -1;
-    } else {
-      return a.order - b.order;
-    }
-  });
-}
-
-function sortInstructions(
-  sortedItems: OrderedItem[],
-  instructions: Instructions
-): Instructions {
-  return [...instructions].sort((a, b) => {
-    let aSortVal = 0;
-    if (a.type === "INSERT") {
-      aSortVal = sortedItems.findIndex((item) => item.id === a.item.id);
-    } else if (a.type === "UPDATE") {
-      aSortVal = sortedItems.findIndex((item) => item.id === a.id);
-    } else {
-      return -1;
-    }
-
-    let bSortVal = 0;
-    if (b.type === "INSERT") {
-      bSortVal = sortedItems.findIndex((item) => item.id === b.item.id);
-    } else if (a.type === "UPDATE") {
-      bSortVal = sortedItems.findIndex((item) => item.id === b.id);
-    } else {
-      return -1;
-    }
-    return aSortVal - bSortVal;
-  });
 }
