@@ -31,14 +31,11 @@ Your front end fetches these items and stores them as state:
   {
     id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
     order: 0,
-    ...
   },
   {
     id: "e34094bf-e62a-4056-b145-d5698cf8bb9d",
     order: 1,
-    ...
   },
-  ...
 ]
 ```
 
