@@ -14,7 +14,7 @@
 
 You're building a UI with lists. Users can change the order of items in the lists. (Trello, Todoist...) 
 
-![Schematic showing how data flows from the UI to the front end and then the back end](./ui-example.png)
+<img src="ui-example.png" width="377" alt="UI illustrating a draggable list where one item is being moved up" />
 
 Your database stores the items along with an `order` field:
 ```
