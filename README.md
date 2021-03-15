@@ -210,12 +210,12 @@ Because `reorder` took care of the logic, the `cities` state now contains the ri
 ```ts
 [
   {
-    id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
+    id: "af84c0bd-342d-4495-b16d...",
     order: 0,
     title: "Stockholm",
   },
   {
-    id: "e34094bf-e62a-4056-b145-d5698cf8bb9d",
+    id: "e34094bf-e62a-4056-b145...",
     order: 1,
     title: "Ottawa",
   }
@@ -229,18 +229,18 @@ Because `reorder` took care of the logic, the `cities` state now contains the ri
 [
   // New item
   {
-    id: "b5f2ebcd-41c2-427e-a8fb-987bdc02b375",
+    id: "b5f2ebcd-41c2-427e-a8fb...",
     order: 0,
     title: "My new city",
   },
   // Previous items, (now updated)
   {
-    id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
+    id: "af84c0bd-342d-4495-b16d...",
     order: 1, // Increased by 1
     title: "Stockholm",
   },
   {
-    id: "e34094bf-e62a-4056-b145-d5698cf8bb9d",
+    id: "e34094bf-e62a-4056-b145...",
     order: 2, // Increased by 1
     title: "Ottawa",
   }
