@@ -181,12 +181,12 @@ Now we got cities in the state. We show the cities in the UI.
 Users can add a new city to the list. We set up a handler for this:
 
 ```ts
-const addCityToTopOfList = (title: string) => {
+const addCity = (title: string, order: number) => {
   // Describe what needs to happen
   const action : Action = {
     action: "INSERT",
     item: { id: uuid(), title },
-    order: 0,
+    order,
   };
 
   // Compute new values for the list
@@ -229,62 +229,57 @@ The updated list is now reflected in the UI, but we still need to persist the or
 POST /api/addCity
 
 data: {
-  id, title
+  id, title, order
 }
 ```
 
-On the server, a resolver handles the request.
+On the server, a resolver handles the request:
 
 ```ts
-[
-  {
-    type: "INSERT",
-    item: {
-      id: "item-2",
-      title: "Faro",
-    },
-    order: 0,
-  },
-  {
-    type: "UPDATE",
-    id: "item-0",
-    order: 1,
-  },
-  {
-    type: "UPDATE",
-    id: "item-1",
-    order: 2,
-  },
-];
+const addCityResolver = (args: MutationArgs) => {
+  const items = db.find(...);
+
+  // Describe what needs to happen
+  const action : Action = {
+    action: "INSERT",
+    item: { id: args.id, title: args.title },
+    order: args.order,
+  };
+
+  // Run the same function that we ran on the front end.
+  // However, this time, we get the 'instructions'.
+  const { instructions } = reorder(cities, action);
+
+  // We loop through the instructions and
+  // simply do what they tell us.
+  instructions.forEach(instruction => {
+    switch(instruction.type) {
+      case "INSERT";
+        db.cities.insert();
+        break;
+
+      case "UPDATE":
+        db.cities.update({
+          id: instruction.id,
+          order: instruction.order
+        });
+        break;
+    }
+  })
+}
 ```
 
-`newItems` contains a new array with all the changes applied.
+Because the front end and back end both used the `reorder` function to compute new list values, they end up with the same result.
 
-```ts
-console.log(newItems);
+The data is now the same in the state and database. 🌻
 
-[
-  {
-    id: "item-2",
-    order: 0,
-    title: "Faro",
-  },
-  {
-    id: "item-0",
-    order: 1,
-    title: "Stockholm",
-  },
-  {
-    id: "item-1",
-    order: 2,
-    title: "Ottawa",
-  },
-];
-```
+--- 
 
 ## Details
 
 ### Performance
+
+Performance tests and profiling can be run through the browser:
 
 https://reorder-items.netlify.app
 
