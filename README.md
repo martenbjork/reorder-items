@@ -46,8 +46,8 @@ Your front end fetches these items and stores them as state:
 
 - When an item is added, removed or moved, the data above needs to be re-calculated.
     - **Adding items:** The new item needs a correct `order` value. Items below need to have their `order` increased since they are moved down by 1.
-    - **Removing items:*** Suddenly there is a gap in the `order` sequence. Remaining items need to have their `order` re-computed.
-    - **Moving items:** All items below the new one needs new `order` values since they were moved too (as a side effect).
+    - **Removing items:** Suddenly there is a gap in the `order` sequence. Remaining items (below the removed one) need to have their `order` reduced by 1.
+    - **Moving items:** All items below the new one needs new `order` values since they were also moved (as a side effect).
 
 - These changes need to be instantaneous in the state & UI. They also need to be persisted on the back end.
 
@@ -58,7 +58,7 @@ Your front end fetches these items and stores them as state:
 ## Usage
 
 <pre align="center">
-const { instructions, items }  =  reorder(currentItems, action);
+   const { instructions, items }  =  reorder(currentItems, action);
 </pre>
 
  <table>
@@ -89,7 +89,6 @@ type UpdateInstruction = {
   type: "UPDATE";
   id: ID;
   order: number;
-  column?: number;
 };
 
 type RemoveInstruction = {
@@ -144,7 +143,7 @@ type MoveAction = {
 
 ![Schematic showing how data flows from the UI to the front end and then the back end](./schematic.png)
 
-#### Step 1: Fetching data
+### Step 1: Fetching data
 
 Your UI contains a list of cities. 
 
@@ -176,7 +175,7 @@ setCities(res.data.getCityList);
 
 Now we got cities in the state. We show the cities in the UI.
 
-#### Step 2: Adding to the list
+### Step 2: Adding to the list
 
 Users can add a new city to the list. We set up a handler for this:
 
@@ -199,6 +198,33 @@ const addCity = (title: string, order: number) => {
 
 Because `reorder` took care of the logic, the `cities` state now equals:
 
+<table>
+<tbody>
+<tr>
+<th>Old state</th>
+<th>New state</th>
+</tr>
+<tr>
+<td valign="top">
+
+```ts
+[
+  {
+    id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
+    order: 0,
+    title: "Stockholm",
+  },
+  {
+    id: "e34094bf-e62a-4056-b145-d5698cf8bb9d",
+    order: 1,
+    title: "Ottawa",
+  }
+]
+```
+</td>
+
+<td valign="top">
+
 ```ts
 [
   // New item
@@ -207,7 +233,6 @@ Because `reorder` took care of the logic, the `cities` state now equals:
     order: 0,
     title: "My new city",
   },
-  // Updated items
   {
     id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
     order: 1, // Increased by 1
@@ -220,8 +245,12 @@ Because `reorder` took care of the logic, the `cities` state now equals:
   }
 ]
 ```
+</td>
+</tr>
+</tbody>
+</table>
 
-#### Step 3: Persisting the changes
+### Step 3: Persisting the changes
 
 The updated list is now reflected in the UI, but we still need to persist the order to the back end. We send an API request to the `addCity` endpoint. 
 
@@ -237,7 +266,7 @@ On the server, a resolver handles the request:
 
 ```ts
 const addCityResolver = (args: MutationArgs) => {
-  const items = db.find(...);
+  const cities = db.cities.find(...);
 
   // Describe what needs to happen
   const action : Action = {
@@ -255,13 +284,17 @@ const addCityResolver = (args: MutationArgs) => {
   instructions.forEach(instruction => {
     switch(instruction.type) {
       case "INSERT";
-        db.cities.insert();
+        db.cities.insert({
+          ...instruction.item
+        });
         break;
 
       case "UPDATE":
         db.cities.update({
           id: instruction.id,
-          order: instruction.order
+          data: {
+            order: instruction.order
+          }
         });
         break;
     }
