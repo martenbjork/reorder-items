@@ -45,9 +45,9 @@ Your front end fetches these items and stores them as state:
 #### The tricky part
 
 - When an item is added, removed or moved, the data above needs to be re-calculated.
-    - Adding items: The new item needs a correct `order` value. Items below need to have their `order` value increased since they are moved down by 1.
-    - Removing an item: Suddenly there is a gap in the `order` sequence. Remaining items need to have their `order` re-computed.
-    - Moving items: All items below the new one needs new `order` values since they were moved too (as a side effect).
+    - **Adding items:** The new item needs a correct `order` value. Items below need to have their `order` increased since they are moved down by 1.
+    - **Removing items:*** Suddenly there is a gap in the `order` sequence. Remaining items need to have their `order` re-computed.
+    - **Moving items:** All items below the new one needs new `order` values since they were moved too (as a side effect).
 
 - These changes need to be instantaneous in the state & UI. They also need to be persisted on the back end.
 
@@ -69,7 +69,9 @@ const { instructions, items }  =  reorder(currentItems, action);
  </tr>
     <tr>
         <td width="25%" valign="top">
-            <p><code>instructions</code> contain the changes that need to be made to the original array. If you need to make changes in a database, these instructions tell you exactly what changes to make.</p>
+            <p><code>instructions</code> tell you what changes <i>you</i> need to be make to the existing data in order to achieve the desired state.</p>
+
+<p>This is useful when you need to persist changes to a database.</p>
 
 
 ```ts
@@ -104,7 +106,7 @@ type RemoveInstruction = {
 <p><code>currentItems</code> is an array of objects.</p>
 </td>
 <td width="25%" valign="top">
-  <p><code>action</code> is a redux-like action with information about the change that you want to make.</p>
+  <p><code>action</code> is a redux-like action that expressed the change that you want to make to the list.</p>
 
 ```ts
 type Action = 
@@ -138,41 +140,102 @@ type MoveAction = {
   </tbody>
 </table>
 
-## Example
+## Example implementation
 
 ![Schematic showing how data flows from the UI to the front end and then the back end](./schematic.png)
 
-You have a list with 2 items. You want to add a new item to the beginning of the list.
+#### Step 1: Fetching data
+
+Your UI contains a list of cities. 
 
 ```ts
-const items = [
+const [cities, setCities) = useState([]);
+```
+
+City data can be fetched at `/api/getCityList`:
+
+```ts
+[
   {
-    id: "item-0",
+    id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
     order: 0,
     title: "Stockholm",
   },
   {
-    id: "item-1",
+    id: "e34094bf-e62a-4056-b145-d5698cf8bb9d",
     order: 1,
     title: "Ottawa",
-  },
-];
-
-const { instructions, newItems } = reorder(items, {
-  action: "INSERT",
-  item: {
-    id: "item-2",
-    title: "Faro",
-  },
-  order: 0,
-});
+  }
+]
 ```
-
-`instructions` tells you what changes to make to your database or cache or order to end up in the state above.
+We fetch these items and put them in the state:
 
 ```ts
-console.log(instructions);
+setCities(res.data.getCityList);
+```
 
+Now we got cities in the state. We show the cities in the UI.
+
+#### Step 2: Adding to the list
+
+Users can add a new city to the list. We set up a handler for this:
+
+```ts
+const addCityToTopOfList = (title: string) => {
+  // Describe what needs to happen
+  const action : Action = {
+    action: "INSERT",
+    item: { id: uuid(), title },
+    order: 0,
+  };
+
+  // Compute new values for the list
+  const { items: updatedCities } = reorder(cities, action);
+
+  // Save to state
+  setCities(updatedCities)
+}
+```
+
+Because `reorder` took care of the logic, the `cities` state now equals:
+
+```ts
+[
+  // New item
+  {
+    id: "b5f2ebcd-41c2-427e-a8fb-987bdc02b375",
+    order: 0,
+    title: "My new city",
+  },
+  // Updated items
+  {
+    id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
+    order: 1, // Increased by 1
+    title: "Stockholm",
+  },
+  {
+    id: "e34094bf-e62a-4056-b145-d5698cf8bb9d",
+    order: 2, // Increased by 1
+    title: "Ottawa",
+  }
+]
+```
+
+#### Step 3: Persisting the changes
+
+The updated list is now reflected in the UI, but we still need to persist the order to the back end. We send an API request to the `addCity` endpoint. 
+
+```ts
+POST /api/addCity
+
+data: {
+  id, title
+}
+```
+
+On the server, a resolver handles the request.
+
+```ts
 [
   {
     type: "INSERT",
