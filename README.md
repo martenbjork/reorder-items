@@ -49,9 +49,7 @@ Your front end fetches these items and stores them as state:
     - Removing an item: Suddenly there is a gap in the `order` sequence. Remaining items need to have their `order` re-computed.
     - Moving items: All items below the new one needs new `order` values since they were moved too (as a side effect).
 
-- These changes need to be instantaneous in the state & UI.
-
-- They also need to be persisted on the back end.
+- These changes need to be instantaneous in the state & UI. They also need to be persisted on the back end.
 
 - This logic needs to be predictable and rock solid so that the UI and back end has the same `order` values.
 
