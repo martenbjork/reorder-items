@@ -233,7 +233,7 @@ Because `reorder` took care of the logic, the `cities` state now contains the ri
     order: 0,
     title: "Amsterdam",
   },
-  // Previous items, (now updated)
+  // Previous items (now updated)
   {
     id: "af84c0bd-342d-4495-b16d...",
     order: 1, // Increased by 1
