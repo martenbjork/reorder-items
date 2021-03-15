@@ -196,7 +196,7 @@ const addCity = (title: string, order: number) => {
 }
 ```
 
-Because `reorder` took care of the logic, the `cities` state now equals:
+Because `reorder` took care of the logic, the `cities` state now contains the right values:
 
 <table>
 <tbody>
@@ -233,6 +233,7 @@ Because `reorder` took care of the logic, the `cities` state now equals:
     order: 0,
     title: "My new city",
   },
+  // Previous items, (now updated)
   {
     id: "af84c0bd-342d-4495-b16d-2aadf3cb74b3",
     order: 1, // Increased by 1
@@ -262,11 +263,14 @@ data: {
 }
 ```
 
-On the server, a resolver handles the request:
+On the server, a resolver handles the request. It too uses the `order` function that we already used on the front end.
+
+Because you can't write JavaScript objects directly to the database, we use the `instructions` array to figure out what changes we need to make to the database.
 
 ```ts
 const addCityResolver = (args: MutationArgs) => {
-  const cities = db.cities.find(...);
+  // Fetch the existing items
+  const cities = getMyCities();
 
   // Describe what needs to happen
   const action : Action = {
@@ -276,11 +280,11 @@ const addCityResolver = (args: MutationArgs) => {
   };
 
   // Run the same function that we ran on the front end.
-  // However, this time, we get the 'instructions'.
+  // However, this time, retrieve the 'instructions'.
   const { instructions } = reorder(cities, action);
 
-  // We loop through the instructions and
-  // simply do what they tell us.
+  // Loop through the instructions
+  // and do what they tell us.
   instructions.forEach(instruction => {
     switch(instruction.type) {
       case "INSERT";
@@ -291,7 +295,9 @@ const addCityResolver = (args: MutationArgs) => {
 
       case "UPDATE":
         db.cities.update({
-          id: instruction.id,
+          where: {
+            id: instruction.id,
+          },
           data: {
             order: instruction.order
           }
@@ -304,7 +310,7 @@ const addCityResolver = (args: MutationArgs) => {
 
 Because the front end and back end both used the `reorder` function to compute new list values, they end up with the same result.
 
-The data is now the same in the state and database. 🌻
+The data is now the same in the state and database. 🌸
 
 --- 
 
@@ -312,7 +318,7 @@ The data is now the same in the state and database. 🌻
 
 ### Performance
 
-Performance tests and profiling can be run through the browser:
+Performance testing and profiling is done through the browser:
 
 https://reorder-items.netlify.app
 
