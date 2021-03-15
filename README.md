@@ -12,7 +12,7 @@
 
 ## Use case
 
-You're building a UI with lists. Users can change the order of items in the lists. (Trello, Todoist...) 
+You're building a UI containing lists. Users can change the order of items in the lists. (Trello, Todoist...) 
 
 <img src="ui-example.png" width="377" alt="UI illustrating a draggable list where one item is being moved up" />
 
