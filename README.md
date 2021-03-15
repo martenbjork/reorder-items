@@ -44,7 +44,7 @@ Your front end fetches these items and stores them as state:
 
 #### The tricky part
 
-- When an item is added, removed or moved, this data needs to be re-calculated:
+- When an item is added, removed or moved, the data above needs to be re-calculated.
     - Adding items: The new item needs a correct `order` value. Items below need to have their `order` value increased since they are moved down by 1.
     - Removing an item: Suddenly there is a gap in the `order` sequence. Remaining items need to have their `order` re-computed.
     - Moving items: All items below the new one needs new `order` values since they were moved too (as a side effect).
