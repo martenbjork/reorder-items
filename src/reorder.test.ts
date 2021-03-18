@@ -560,6 +560,38 @@ describe("Operations on items without 'column' property", () => {
       );
     });
   });
+
+  describe("Types", () => {
+    it("returns values with string IDs when given an array with string IDs", () => {
+      const { items: newItems, instructions } = reorder([items[0]], {
+        type: "INSERT",
+        item: newItem,
+        order: 1,
+      });
+
+      expect(typeof newItems[0].id).toEqual("string");
+      expect(
+        instructions[0].type === "INSERT" && typeof instructions[0].item.id
+      ).toEqual("string");
+    });
+
+    it("returns values with numeric IDs when given an array with numeric IDs", () => {
+      const { items: newItems, instructions } = reorder(
+        [{ ...items[0], id: 123 }],
+        {
+          type: "INSERT",
+          item: { ...newItem, id: 345 },
+          order: 1,
+        }
+      );
+      console.log(instructions);
+
+      expect(typeof newItems[0].id).toEqual("number");
+      expect(
+        instructions[0].type === "INSERT" && typeof instructions[0].item.id
+      ).toEqual("number");
+    });
+  });
 });
 
 describe("Operations on items with 'column' property", () => {
