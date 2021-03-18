@@ -41,10 +41,10 @@ Your front end fetches these items and stores them as state:
 
 #### The tricky part
 
-- When an item is added, removed or moved, the data above needs to be re-calculated.
-    - **Adding items:** The new item needs a correct `order` value. Items below need to have their `order` increased by 1 since they are pushed down by the new item.
-    - **Removing items:** Suddenly there is a gap in the `order` sequence. Remaining items (below the removed one) need to have their `order` reduced by 1.
-    - **Moving items:** All items below the new one needs new `order` values since they were also moved (as a side effect).
+- When an item is added, removed or moved, the data before needs to be re-calculated.
+    - **Adding items:** The new item needs a correct `order` value. Items after need to have their `order` increased by 1 since they are pushed down by the new item.
+    - **Removing items:** Suddenly there is a gap in the `order` sequence. Remaining items (after the removed one) need to have their `order` reduced by 1.
+    - **Moving items:** All items after the new one needs new `order` values since they were also moved (as a side effect).
 
 - These changes need to be instantaneous in the state & UI. They also need to be persisted on the back end.
 
