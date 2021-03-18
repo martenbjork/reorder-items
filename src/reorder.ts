@@ -5,9 +5,13 @@ import {
   Action,
   Instruction,
   Instructions,
+  ID,
 } from "./reorder.types";
 
-function clampOrder(items: OrderedItem[], order: number): number {
+function clampOrder<T extends ID>(
+  items: OrderedItem<T>[],
+  order: number
+): number {
   let newOrder = order;
   if (newOrder < 0) {
     newOrder = 0;
@@ -17,11 +21,11 @@ function clampOrder(items: OrderedItem[], order: number): number {
   return newOrder;
 }
 
-function insertItem(
-  items: OrderedItem[],
-  action: InsertAction
-): { items: OrderedItem[]; instructions: Instructions } {
-  let instructions: Instruction[] = [];
+function insertItem<T extends ID>(
+  items: OrderedItem<T>[],
+  action: InsertAction<T>
+): { items: OrderedItem<T>[]; instructions: Instructions<T> } {
+  let instructions: Instruction<T>[] = [];
 
   let newOrder = clampOrder(items, action.order);
 
@@ -35,7 +39,7 @@ function insertItem(
         order: item.order + 1,
       };
 
-      let instruction: Instruction = {
+      let instruction: Instruction<T> = {
         type: "UPDATE",
         id: bumpedItem.id,
         order: bumpedItem.order,
@@ -48,7 +52,7 @@ function insertItem(
     return item;
   });
 
-  let newItem: OrderedItem = {
+  let newItem: OrderedItem<T> = {
     ...action.item,
     order: newOrder,
   };
@@ -57,7 +61,7 @@ function insertItem(
     newItem.column = action.column;
   }
 
-  let instruction: Instruction = {
+  let instruction: Instruction<T> = {
     type: "INSERT",
     item: newItem,
   };
@@ -69,11 +73,11 @@ function insertItem(
   return { items: newItems, instructions };
 }
 
-function removeItem(
-  items: OrderedItem[],
-  action: RemoveAction
-): { items: OrderedItem[]; instructions: Instructions } {
-  let instructions: Instruction[] = [];
+function removeItem<T extends ID>(
+  items: OrderedItem<T>[],
+  action: RemoveAction<T>
+): { items: OrderedItem<T>[]; instructions: Instructions<T> } {
+  let instructions: Instruction<T>[] = [];
   let newItems = [...items];
 
   const removedItem = items.find((item) => item.id === action.id);
@@ -116,11 +120,11 @@ function removeItem(
 /**
  * Performs an action (insert, remove, move) on the items.
  */
-export function reorder(
-  items: OrderedItem[],
-  action: Action
-): { items: OrderedItem[]; instructions: Instructions } {
-  let allInstructions: Instructions = [];
+export function reorder<T extends ID>(
+  items: OrderedItem<T>[],
+  action: Action<T>
+): { items: OrderedItem<T>[]; instructions: Instructions<T> } {
+  let allInstructions: Instructions<T> = [];
   let newItems = [...items];
 
   // If INSERT, bump the indices in same columns (if after inserted order)
@@ -176,7 +180,7 @@ export function reorder(
         (instruction) => instruction.type === "INSERT"
       );
       if (insertInstruction.type === "INSERT") {
-        let moveInstruction: Instruction = {
+        let moveInstruction: Instruction<T> = {
           type: "UPDATE",
           id: movedItem.id,
           order: insertInstruction.item.order,
