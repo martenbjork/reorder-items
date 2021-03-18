@@ -584,7 +584,6 @@ describe("Operations on items without 'column' property", () => {
           order: 1,
         }
       );
-      console.log(instructions);
 
       expect(typeof newItems[0].id).toEqual("number");
       expect(
