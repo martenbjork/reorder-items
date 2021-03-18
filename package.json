@@ -20,8 +20,17 @@
     "type": "git",
     "url": "git+https://github.com/martenbjork/reorder-items.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "reorder",
+    "list",
+    "drag",
+    "order"
+  ],
+  "author": {
+    "name": "Marten Bjork",
+    "email": "marten@martenbjork.com",
+    "url": "https://www.martenbjork.com/"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/martenbjork/reorder-items/issues"
