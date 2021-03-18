@@ -1,13 +1,13 @@
 export type ID = string | number;
 
-export type OrderedItem<T extends ID> = {
+export type OrderedItem<T extends ID = string> = {
   id: T;
   order: number;
   column?: number;
   [x: string]: any;
 };
 
-export type IdItem<T extends ID> = {
+export type IdItem<T extends ID = string> = {
   id: T;
   [x: string]: any;
 };
@@ -53,9 +53,9 @@ export type RemoveInstruction<T extends ID> = {
   id: T;
 };
 
-export type Instruction<T extends ID> =
+export type Instruction<T extends ID = string> =
   | InsertInstruction<T>
   | UpdateInstruction<T>
   | RemoveInstruction<T>;
 
-export type Instructions<T extends ID> = Instruction<T>[];
+export type Instructions<T extends ID = string> = Instruction<T>[];
