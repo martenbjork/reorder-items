@@ -3,20 +3,20 @@ import {
   InsertAction,
   RemoveAction,
   Action,
-  Instruction,
   Instructions,
   ID,
+  MoveAction,
+  UpdateInstruction,
+  RemoveInstruction,
+  InsertInstruction,
 } from "./reorder.types";
 
-function clampOrder<T extends ID>(
-  items: OrderedItem<T>[],
-  order: number
-): number {
+function clampOrder<T extends ID>(itemCount: number, order: number): number {
   let newOrder = order;
   if (newOrder < 0) {
     newOrder = 0;
-  } else if (newOrder > items.length + 1) {
-    newOrder = items.length;
+  } else if (newOrder > itemCount - 1) {
+    newOrder = itemCount - 1;
   }
   return newOrder;
 }
@@ -24,22 +24,23 @@ function clampOrder<T extends ID>(
 function insertItem<T extends ID>(
   items: OrderedItem<T>[],
   action: InsertAction<T>
-): { items: OrderedItem<T>[]; instructions: Instructions<T> } {
-  let instructions: Instruction<T>[] = [];
+): {
+  items: OrderedItem<T>[];
+  instructions: (InsertInstruction<T> | UpdateInstruction<T>)[];
+} {
+  let instructions: (InsertInstruction<T> | UpdateInstruction<T>)[] = [];
 
-  let newOrder = clampOrder(items, action.order);
+  const itemCountAfterInsert = items.length + 1;
+  let newOrder = clampOrder(itemCountAfterInsert, action.order);
 
   let newItems = [...items].map(function bumpAndCreateUpdateInstruction(item) {
-    const itemIsInColumn =
-      typeof action.column === "number" ? item.column === action.column : true;
-
-    if (itemIsInColumn && item.order >= action.order) {
+    if (item.order >= action.order) {
       const bumpedItem = {
         ...item,
         order: item.order + 1,
       };
 
-      let instruction: Instruction<T> = {
+      let instruction: UpdateInstruction<T> = {
         type: "UPDATE",
         id: bumpedItem.id,
         order: bumpedItem.order,
@@ -57,11 +58,7 @@ function insertItem<T extends ID>(
     order: newOrder,
   };
 
-  if (typeof action.column === "number") {
-    newItem.column = action.column;
-  }
-
-  let instruction: Instruction<T> = {
+  let instruction: InsertInstruction<T> = {
     type: "INSERT",
     item: newItem,
   };
@@ -76,8 +73,11 @@ function insertItem<T extends ID>(
 function removeItem<T extends ID>(
   items: OrderedItem<T>[],
   action: RemoveAction<T>
-): { items: OrderedItem<T>[]; instructions: Instructions<T> } {
-  let instructions: Instruction<T>[] = [];
+): {
+  items: OrderedItem<T>[];
+  instructions: (RemoveInstruction<T> | UpdateInstruction<T>)[];
+} {
+  let instructions: (RemoveInstruction<T> | UpdateInstruction<T>)[] = [];
   let newItems = [...items];
 
   const removedItem = items.find((item) => item.id === action.id);
@@ -91,12 +91,7 @@ function removeItem<T extends ID>(
     newItems = newItems
       .filter((item) => item.id !== action.id)
       .map(function reduceAndCreateUpdateInstruction(item) {
-        const itemIsInColumn =
-          typeof removedItem.column === "number"
-            ? item.column === removedItem.column
-            : true;
-
-        if (itemIsInColumn && item.order > removedItem.order) {
+        if (item.order > removedItem.order) {
           let reducedItem = {
             ...item,
             order: item.order - 1,
@@ -117,6 +112,59 @@ function removeItem<T extends ID>(
   return { items: newItems, instructions };
 }
 
+function moveItem<T extends ID>(
+  items: OrderedItem<T>[],
+  action: MoveAction<T>
+): { items: OrderedItem<T>[]; instructions: UpdateInstruction<T>[] } {
+  // Algo:
+  // - Moved item leaves a hole
+  // - Destination needs space
+  // Items between source-destination indices are affected
+  //
+  // If moving up, bump every item between (destination <=> source)
+  // If moving down, reduce every item between (source <=> destination)
+
+  let newItems = [...items];
+  const instructions: UpdateInstruction<T>[] = [];
+
+  const movedItem = items.find((item) => item.id === action.id);
+  console.log(action, movedItem);
+  if (movedItem) {
+    const direction = action.toOrder > movedItem.order ? "DOWN" : "UP";
+    if (direction === "DOWN") {
+      newItems = newItems.map((item) => {
+        if (item.order <= action.toOrder && item.order > movedItem.order) {
+          const newOrder = item.order - 1;
+          instructions.push({ type: "UPDATE", id: item.id, order: newOrder });
+          return { ...item, order: newOrder };
+        }
+        if (item.id === action.id) {
+          const newOrder = clampOrder(items.length, action.toOrder);
+          instructions.push({ type: "UPDATE", id: item.id, order: newOrder });
+          return { ...item, order: newOrder };
+        }
+        return item;
+      });
+    } else {
+      newItems = newItems.map((item) => {
+        if (item.order < movedItem.order && item.order >= action.toOrder) {
+          const newOrder = item.order + 1;
+          instructions.push({ type: "UPDATE", id: item.id, order: newOrder });
+          return { ...item, order: newOrder };
+        }
+        if (item.id === action.id) {
+          const newOrder = clampOrder(items.length, action.toOrder);
+          instructions.push({ type: "UPDATE", id: item.id, order: newOrder });
+          return { ...item, order: clampOrder(items.length, action.toOrder) };
+        }
+        return item;
+      });
+    }
+  }
+
+  return { items: newItems, instructions };
+}
+
 /**
  * Performs an action (insert, remove, move) on the items.
  */
@@ -124,74 +172,12 @@ export function reorder<T extends ID>(
   items: OrderedItem<T>[],
   action: Action<T>
 ): { items: OrderedItem<T>[]; instructions: Instructions<T> } {
-  let allInstructions: Instructions<T> = [];
-  let newItems = [...items];
-
-  // If INSERT, bump the indices in same columns (if after inserted order)
-  if (action.type === "INSERT") {
-    let { items: insertResult, instructions } = insertItem(items, action);
-    newItems = insertResult;
-    allInstructions = [...allInstructions, ...instructions];
+  switch (action.type) {
+    case "INSERT":
+      return insertItem(items, action);
+    case "REMOVE":
+      return removeItem(items, action);
+    case "MOVE":
+      return moveItem(items, action);
   }
-  // If REMOVE, reduce the indices in same column (if after removed order)
-  else if (action.type === "REMOVE") {
-    let { items: removeResult, instructions } = removeItem(items, action);
-    newItems = removeResult;
-    allInstructions = [...allInstructions, ...instructions];
-  }
-
-  // If MOVE, first do a REMOVE, then an INSERT
-  else if (action.type === "MOVE") {
-    const movedItem = items.find(function findMovedItem(item) {
-      return item.id === action.id;
-    });
-
-    if (movedItem) {
-      let {
-        items: removeResult,
-        instructions: removeInstructions,
-      } = removeItem(items, {
-        type: "REMOVE",
-        id: action.id,
-      });
-      allInstructions = [...allInstructions, ...removeInstructions];
-
-      let {
-        items: insertResult,
-        instructions: insertInstructions,
-      } = insertItem(removeResult, {
-        type: "INSERT",
-        order: action.toOrder,
-        column: action.toColumn,
-        item: movedItem,
-      });
-
-      newItems = insertResult;
-      allInstructions = [...allInstructions, ...insertInstructions];
-
-      // The INSERT and REMOVE operations above result in
-      // 2 separate instructions. We actually only want
-      // 1 instruction — an UPDATE one. So, we remove those
-      // instructions and insert a new one.
-      allInstructions = allInstructions.filter(
-        (instruction) => instruction.type === "UPDATE"
-      );
-      const insertInstruction = insertInstructions.find(
-        (instruction) => instruction.type === "INSERT"
-      );
-      if (insertInstruction.type === "INSERT") {
-        let moveInstruction: Instruction<T> = {
-          type: "UPDATE",
-          id: movedItem.id,
-          order: insertInstruction.item.order,
-        };
-        if (typeof insertInstruction.item.column === "number") {
-          moveInstruction.column = insertInstruction.item.column;
-        }
-        allInstructions.push(moveInstruction);
-      }
-    }
-  }
-
-  return { items: newItems, instructions: allInstructions };
 }
