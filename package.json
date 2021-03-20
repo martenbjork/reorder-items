@@ -9,7 +9,7 @@
     "build/"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch --coverage",
     "build": "tsc && yarn tsc -p tsconfig-cjs.json",
     "docs-server": "http-server ./docs-build",
     "docs-build": "yarn docs-build-prep && yarn tsc -p docs/tsconfig.json",
