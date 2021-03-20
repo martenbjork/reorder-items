@@ -1,6 +1,6 @@
 {
   "name": "reorder-items",
-  "version": "0.1.3",
+  "version": "0.9",
   "description": "",
   "main": "build/cjs/reorder.js",
   "module": "build/esm/reorder.js",
