@@ -1,6 +1,6 @@
 {
   "name": "reorder-items",
-  "version": "0.1.2",
+  "version": "0.9",
   "description": "",
   "main": "build/cjs/reorder.js",
   "module": "build/esm/reorder.js",
@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "coverage": "jest --watch --coverage",
     "build": "tsc && yarn tsc -p tsconfig-cjs.json",
     "docs-server": "http-server ./docs-build",
     "docs-build": "yarn docs-build-prep && yarn tsc -p docs/tsconfig.json",

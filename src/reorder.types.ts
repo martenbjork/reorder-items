@@ -1,58 +1,57 @@
-export type ID = string;
+export type ID = string | number;
 
-export type OrderedItem = {
-  id: ID;
+export type OrderedItem<T extends ID = string> = {
+  id: T;
   order: number;
-  column?: number;
   [x: string]: any;
 };
 
-export type IdItem = {
-  id: ID;
+export type IdItem<T extends ID = string> = {
+  id: T;
   [x: string]: any;
 };
 
-export type InsertAction = {
+export type InsertAction<T extends ID> = {
   type: "INSERT";
-  item: IdItem;
+  item: IdItem<T>;
   order: number;
-  column?: number;
 };
 
-export type RemoveAction = {
+export type RemoveAction<T extends ID> = {
   type: "REMOVE";
-  id: ID;
+  id: T;
 };
 
-export type MoveAction = {
+export type MoveAction<T extends ID> = {
   type: "MOVE";
-  id: ID;
+  id: T;
   toOrder: number;
-  toColumn?: number;
 };
 
-export type Action = InsertAction | RemoveAction | MoveAction;
+export type Action<T extends ID> =
+  | InsertAction<T>
+  | RemoveAction<T>
+  | MoveAction<T>;
 
-export type InsertInstruction = {
+export type InsertInstruction<T extends ID> = {
   type: "INSERT";
-  item: OrderedItem;
+  item: OrderedItem<T>;
 };
 
-export type UpdateInstruction = {
+export type UpdateInstruction<T extends ID> = {
   type: "UPDATE";
-  id: ID;
+  id: T;
   order: number;
-  column?: number;
 };
 
-export type RemoveInstruction = {
+export type RemoveInstruction<T extends ID> = {
   type: "REMOVE";
-  id: ID;
+  id: T;
 };
 
-export type Instruction =
-  | InsertInstruction
-  | UpdateInstruction
-  | RemoveInstruction;
+export type Instruction<T extends ID = string> =
+  | InsertInstruction<T>
+  | UpdateInstruction<T>
+  | RemoveInstruction<T>;
 
-export type Instructions = Instruction[];
+export type Instructions<T extends ID = string> = Instruction<T>[];

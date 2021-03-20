@@ -1,5 +1,11 @@
 import { reorder } from "./reorder";
-import { IdItem, Instructions, OrderedItem } from "./reorder.types";
+import {
+  IdItem,
+  InsertInstruction,
+  Instructions,
+  OrderedItem,
+  RemoveInstruction,
+} from "./reorder.types";
 const orderBy = require("lodash.orderby");
 
 const orderById = <T>(items: T[]): T[] => orderBy(items, ["id"]);
@@ -308,6 +314,67 @@ describe("Operations on items without 'column' property", () => {
 
       expect(instructions).toStrictEqual(expectedInstructions);
     });
+
+    it("returns values with string IDs when given an array with string IDs", () => {
+      const { items: newItems, instructions } = reorder(items, {
+        type: "INSERT",
+        item: newItem,
+        order: 1,
+      });
+
+      // Test returned items
+      expect(newItems.map((item) => typeof item.id)).toEqual([
+        "string",
+        "string",
+        "string",
+        "string",
+      ]);
+
+      // Test returned instructions
+      expect(
+        instructions.map((instruction) => {
+          if (instruction.type === "INSERT") {
+            return typeof instruction.item.id;
+          } else if (instruction.type === "UPDATE") {
+            return typeof instruction.id;
+          }
+        })
+      ).toEqual(["string", "string", "string"]);
+    });
+
+    it("returns values with numeric IDs when given an array with numeric IDs", () => {
+      const { items: newItems, instructions } = reorder(
+        [
+          { ...items[0], id: 123 },
+          { ...items[1], id: 456 },
+          { ...items[2], id: 678 },
+        ],
+        {
+          type: "INSERT",
+          item: { ...newItem, id: 999 },
+          order: 1,
+        }
+      );
+
+      // Test returned items
+      expect(newItems.map((item) => typeof item.id)).toEqual([
+        "number",
+        "number",
+        "number",
+        "number",
+      ]);
+
+      // Test returned instructions
+      expect(
+        instructions.map((instruction) => {
+          if (instruction.type === "INSERT") {
+            return typeof instruction.item.id;
+          } else if (instruction.type === "UPDATE") {
+            return typeof instruction.id;
+          }
+        })
+      ).toEqual(["number", "number", "number"]);
+    });
   });
 
   describe("REMOVE", () => {
@@ -410,6 +477,55 @@ describe("Operations on items without 'column' property", () => {
       ];
       expect(expectedInstructions).toStrictEqual(instructions);
     });
+
+    it("returns values with string IDs when given an array with string IDs", () => {
+      const { items: newItems, instructions } = reorder(items, {
+        type: "REMOVE",
+        id: items[0].id,
+      });
+
+      // Test returned items
+      expect(newItems.map((item) => typeof item.id)).toEqual([
+        "string",
+        "string",
+      ]);
+
+      // Test returned instructions
+      expect(
+        instructions.map(
+          (instruction) =>
+            (instruction.type === "REMOVE" || instruction.type === "UPDATE") &&
+            typeof instruction.id
+        )
+      ).toEqual(["string", "string", "string"]);
+    });
+
+    it("returns values with numeric IDs when given an array with numeric IDs", () => {
+      const itemsWithNumericIds = items.map((item, i) => ({
+        ...item,
+        id: i,
+      }));
+
+      const { items: newItems, instructions } = reorder(itemsWithNumericIds, {
+        type: "REMOVE",
+        id: itemsWithNumericIds[0].id,
+      });
+
+      // Test returned items
+      expect(newItems.map((item) => typeof item.id)).toEqual([
+        "number",
+        "number",
+      ]);
+
+      // Test returned instructions
+      expect(
+        instructions.map(
+          (instruction) =>
+            (instruction.type === "REMOVE" || instruction.type === "UPDATE") &&
+            typeof instruction.id
+        )
+      ).toEqual(["number", "number", "number"]);
+    });
   });
 
   describe("MOVE", () => {
@@ -424,6 +540,17 @@ describe("Operations on items without 'column' property", () => {
       expect(instructions).toStrictEqual([]);
     });
 
+    test("Does nothing if an item's order is the same as it's target order", () => {
+      const { items: newItems, instructions } = reorder(items, {
+        type: "MOVE",
+        id: itemA.id,
+        toOrder: itemA.order,
+      });
+
+      expect(newItems).toStrictEqual(items);
+      expect(instructions).toStrictEqual([]);
+    });
+
     test("Moves items from top to bottom", () => {
       const { items: newItems, instructions } = reorder(items, {
         type: "MOVE",
@@ -432,22 +559,26 @@ describe("Operations on items without 'column' property", () => {
       });
 
       expect(newItems).toStrictEqual([
+        { ...itemA, order: 2 },
         { ...itemB, order: 0 },
         { ...itemC, order: 1 },
-        { ...itemA, order: 2 },
       ]);
 
       const expectedInstructions: Instructions = [
         {
           type: "UPDATE",
+          id: itemA.id,
+          order: 2,
+        },
+        {
+          type: "UPDATE",
           id: itemB.id,
           order: 0,
         },
-        { type: "UPDATE", id: itemC.id, order: 1 },
         {
           type: "UPDATE",
-          id: itemA.id,
-          order: 2,
+          id: itemC.id,
+          order: 1,
         },
       ];
 
@@ -463,18 +594,13 @@ describe("Operations on items without 'column' property", () => {
 
       expect(orderById(newItems)).toStrictEqual(
         orderById([
-          { ...itemC, order: 0 },
           { ...itemA, order: 1 },
           { ...itemB, order: 2 },
+          { ...itemC, order: 0 },
         ])
       );
 
       const expectedInstructions: Instructions = [
-        {
-          type: "UPDATE",
-          id: itemC.id,
-          order: 0,
-        },
         {
           type: "UPDATE",
           id: itemA.id,
@@ -485,6 +611,11 @@ describe("Operations on items without 'column' property", () => {
           id: itemB.id,
           order: 2,
         },
+        {
+          type: "UPDATE",
+          id: itemC.id,
+          order: 0,
+        },
       ];
 
       expect(orderById(instructions)).toStrictEqual(
@@ -492,7 +623,7 @@ describe("Operations on items without 'column' property", () => {
       );
     });
 
-    it("Moves items from top to order 999 (and adjusts order max order + 1)", () => {
+    it("Moves items from top to order 999 (and clamps order value)", () => {
       const { items: newItems, instructions } = reorder(items, {
         type: "MOVE",
         id: itemA.id,
@@ -500,22 +631,26 @@ describe("Operations on items without 'column' property", () => {
       });
 
       expect(newItems).toStrictEqual([
+        { ...itemA, order: 2 },
         { ...itemB, order: 0 },
         { ...itemC, order: 1 },
-        { ...itemA, order: 2 },
       ]);
 
       const expectedInstructions: Instructions = [
         {
           type: "UPDATE",
+          id: itemA.id,
+          order: 2,
+        },
+        {
+          type: "UPDATE",
           id: itemB.id,
           order: 0,
         },
-        { type: "UPDATE", id: itemC.id, order: 1 },
         {
           type: "UPDATE",
-          id: itemA.id,
-          order: 2,
+          id: itemC.id,
+          order: 1,
         },
       ];
 
@@ -531,18 +666,13 @@ describe("Operations on items without 'column' property", () => {
 
       expect(orderById(newItems)).toStrictEqual(
         orderById([
-          { ...itemC, order: 0 },
           { ...itemA, order: 1 },
           { ...itemB, order: 2 },
+          { ...itemC, order: 0 },
         ])
       );
 
       const expectedInstructions: Instructions = [
-        {
-          type: "UPDATE",
-          id: itemC.id,
-          order: 0,
-        },
         {
           type: "UPDATE",
           id: itemA.id,
@@ -553,60 +683,43 @@ describe("Operations on items without 'column' property", () => {
           id: itemB.id,
           order: 2,
         },
+        {
+          type: "UPDATE",
+          id: itemC.id,
+          order: 0,
+        },
       ];
 
       expect(orderById(instructions)).toStrictEqual(
         orderById(expectedInstructions)
       );
     });
-  });
-});
 
-describe("Operations on items with 'column' property", () => {
-  describe("INSERT", () => {
-    test("Inserts item in column 1, order 0", () => {
-      const { items: newItems, instructions } = reorder(itemsInColumns, {
-        type: "INSERT",
-        item: newItem,
-        column: 1,
-        order: 0,
+    it("Moves items from top to middle of array", () => {
+      const { items: newItems, instructions } = reorder(items, {
+        type: "MOVE",
+        id: itemA.id,
+        toOrder: 1,
       });
 
       expect(orderById(newItems)).toStrictEqual(
         orderById([
-          itemAA,
-          itemAB,
-          itemAC,
-          { ...newItem, column: 1, order: 0 },
-          { ...itemBA, order: 1 },
-          { ...itemBB, order: 2 },
-          { ...itemBC, order: 3 },
+          { ...itemA, order: 1 },
+          { ...itemB, order: 0 },
+          { ...itemC, order: 2 },
         ])
       );
 
       const expectedInstructions: Instructions = [
         {
-          type: "INSERT",
-          item: {
-            ...newItem,
-            column: 1,
-            order: 0,
-          },
-        },
-        {
           type: "UPDATE",
-          id: itemBA.id,
+          id: itemA.id,
           order: 1,
         },
         {
           type: "UPDATE",
-          id: itemBB.id,
-          order: 2,
-        },
-        {
-          type: "UPDATE",
-          id: itemBC.id,
-          order: 3,
+          id: itemB.id,
+          order: 0,
         },
       ];
 
@@ -614,61 +727,32 @@ describe("Operations on items with 'column' property", () => {
         orderById(expectedInstructions)
       );
     });
-  });
 
-  describe("MOVE", () => {
-    test("Moves an item from column 0 to column 1", () => {
-      const { items: newItems, instructions } = reorder(itemsInColumns, {
+    it("Moves items from bottom to middle of array", () => {
+      const { items: newItems, instructions } = reorder(items, {
         type: "MOVE",
-        id: itemAA.id,
-        toColumn: 1,
-        toOrder: 0,
+        id: itemC.id,
+        toOrder: 1,
       });
 
       expect(orderById(newItems)).toStrictEqual(
-        orderById(
-          orderById([
-            { ...itemAB, order: 0 },
-            { ...itemAC, order: 1 },
-            { ...itemAA, column: 1, order: 0 },
-            { ...itemBA, order: 1 },
-            { ...itemBB, order: 2 },
-            { ...itemBC, order: 3 },
-          ])
-        )
+        orderById([
+          { ...itemA, order: 0 },
+          { ...itemB, order: 2 },
+          { ...itemC, order: 1 },
+        ])
       );
 
       const expectedInstructions: Instructions = [
         {
           type: "UPDATE",
-          id: itemAB.id,
-          order: 0,
-        },
-        {
-          type: "UPDATE",
-          id: itemAC.id,
-          order: 1,
-        },
-        {
-          type: "UPDATE",
-          id: itemAA.id,
-          column: 1,
-          order: 0,
-        },
-        {
-          type: "UPDATE",
-          id: itemBA.id,
-          order: 1,
-        },
-        {
-          type: "UPDATE",
-          id: itemBB.id,
+          id: itemB.id,
           order: 2,
         },
         {
           type: "UPDATE",
-          id: itemBC.id,
-          order: 3,
+          id: itemC.id,
+          order: 1,
         },
       ];
 
@@ -677,11 +761,50 @@ describe("Operations on items with 'column' property", () => {
       );
     });
 
-    // test("Moves items from 1 to column -1 and (adjusts column to 0)", () => {
-    //   expect(true).toStrictEqual(false);
-    // });
-    // test("Moves items from 0 to column 999 and (adjusts column to 1)", () => {
-    //   expect(true).toStrictEqual(false);
-    // });
+    it("returns values with string IDs when given an array with string IDs", () => {
+      const { items: newItems, instructions } = reorder(items, {
+        type: "MOVE",
+        id: itemA.id,
+        toOrder: 100,
+      });
+
+      // Test returned items
+      expect(newItems.map((item) => typeof item.id)).toEqual([
+        "string",
+        "string",
+        "string",
+      ]);
+
+      // Test returned instructions
+      expect(
+        instructions.map((item) => item.type === "UPDATE" && typeof item.id)
+      ).toEqual(["string", "string", "string"]);
+    });
+
+    it("returns values with numeric IDs when given an array with numeric IDs", () => {
+      const itemsWithNumericIds = items.map((item, i) => ({
+        ...item,
+        id: i,
+      }));
+
+      const { items: newItems, instructions } = reorder(itemsWithNumericIds, {
+        type: "REMOVE",
+        id: itemsWithNumericIds[0].id,
+      });
+
+      // Test returned items
+      expect(newItems.map((item) => typeof item.id)).toEqual([
+        "number",
+        "number",
+      ]);
+
+      // Test returned instructions
+      expect(
+        instructions.map(
+          (item) =>
+            (item.type === "REMOVE" || item.type === "UPDATE") && typeof item.id
+        )
+      ).toEqual(["number", "number", "number"]);
+    });
   });
 });
