@@ -1,5 +1,11 @@
 import { reorder } from "./reorder";
-import { IdItem, Instructions, OrderedItem } from "./reorder.types";
+import {
+  IdItem,
+  InsertInstruction,
+  Instructions,
+  OrderedItem,
+  RemoveInstruction,
+} from "./reorder.types";
 const orderBy = require("lodash.orderby");
 
 const orderById = <T>(items: T[]): T[] => orderBy(items, ["id"]);
@@ -310,38 +316,64 @@ describe("Operations on items without 'column' property", () => {
     });
 
     it("returns values with string IDs when given an array with string IDs", () => {
-      const { items: newItems, instructions } = reorder([items[0]], {
+      const { items: newItems, instructions } = reorder(items, {
         type: "INSERT",
         item: newItem,
         order: 1,
       });
 
       // Test returned items
-      expect(typeof newItems[0].id).toEqual("string");
+      expect(newItems.map((item) => typeof item.id)).toEqual([
+        "string",
+        "string",
+        "string",
+        "string",
+      ]);
 
       // Test returned instructions
       expect(
-        instructions[0].type === "INSERT" && typeof instructions[0].item.id
-      ).toEqual("string");
+        instructions.map((instruction) => {
+          if (instruction.type === "INSERT") {
+            return typeof instruction.item.id;
+          } else if (instruction.type === "UPDATE") {
+            return typeof instruction.id;
+          }
+        })
+      ).toEqual(["string", "string", "string"]);
     });
 
     it("returns values with numeric IDs when given an array with numeric IDs", () => {
       const { items: newItems, instructions } = reorder(
-        [{ ...items[0], id: 123 }],
+        [
+          { ...items[0], id: 123 },
+          { ...items[1], id: 456 },
+          { ...items[2], id: 678 },
+        ],
         {
           type: "INSERT",
-          item: { ...newItem, id: 345 },
+          item: { ...newItem, id: 999 },
           order: 1,
         }
       );
 
       // Test returned items
-      expect(typeof newItems[0].id).toEqual("number");
+      expect(newItems.map((item) => typeof item.id)).toEqual([
+        "number",
+        "number",
+        "number",
+        "number",
+      ]);
 
       // Test returned instructions
       expect(
-        instructions[0].type === "INSERT" && typeof instructions[0].item.id
-      ).toEqual("number");
+        instructions.map((instruction) => {
+          if (instruction.type === "INSERT") {
+            return typeof instruction.item.id;
+          } else if (instruction.type === "UPDATE") {
+            return typeof instruction.id;
+          }
+        })
+      ).toEqual(["number", "number", "number"]);
     });
   });
 
@@ -461,8 +493,9 @@ describe("Operations on items without 'column' property", () => {
       // Test returned instructions
       expect(
         instructions.map(
-          (item) =>
-            (item.type === "REMOVE" || item.type === "UPDATE") && typeof item.id
+          (instruction) =>
+            (instruction.type === "REMOVE" || instruction.type === "UPDATE") &&
+            typeof instruction.id
         )
       ).toEqual(["string", "string", "string"]);
     });
@@ -487,8 +520,9 @@ describe("Operations on items without 'column' property", () => {
       // Test returned instructions
       expect(
         instructions.map(
-          (item) =>
-            (item.type === "REMOVE" || item.type === "UPDATE") && typeof item.id
+          (instruction) =>
+            (instruction.type === "REMOVE" || instruction.type === "UPDATE") &&
+            typeof instruction.id
         )
       ).toEqual(["number", "number", "number"]);
     });
