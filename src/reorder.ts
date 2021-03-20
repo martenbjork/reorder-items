@@ -120,7 +120,9 @@ function moveItem<T extends ID>(
   const instructions: UpdateInstruction<T>[] = [];
 
   const movedItem = items.find((item) => item.id === action.id);
-  if (movedItem) {
+  const movedItemIsActuallyMoving = movedItem?.order !== action.toOrder;
+
+  if (movedItem && movedItemIsActuallyMoving) {
     const direction = action.toOrder > movedItem.order ? "DOWN" : "UP";
     if (direction === "DOWN") {
       newItems = newItems.map((item) => {

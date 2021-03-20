@@ -506,6 +506,17 @@ describe("Operations on items without 'column' property", () => {
       expect(instructions).toStrictEqual([]);
     });
 
+    test("Does nothing if an item's order is the same as it's target order", () => {
+      const { items: newItems, instructions } = reorder(items, {
+        type: "MOVE",
+        id: itemA.id,
+        toOrder: itemA.order,
+      });
+
+      expect(newItems).toStrictEqual(items);
+      expect(instructions).toStrictEqual([]);
+    });
+
     test("Moves items from top to bottom", () => {
       const { items: newItems, instructions } = reorder(items, {
         type: "MOVE",
@@ -633,7 +644,6 @@ describe("Operations on items without 'column' property", () => {
           id: itemA.id,
           order: 1,
         },
-
         {
           type: "UPDATE",
           id: itemB.id,
@@ -643,6 +653,72 @@ describe("Operations on items without 'column' property", () => {
           type: "UPDATE",
           id: itemC.id,
           order: 0,
+        },
+      ];
+
+      expect(orderById(instructions)).toStrictEqual(
+        orderById(expectedInstructions)
+      );
+    });
+
+    it("Moves items from top to middle of array", () => {
+      const { items: newItems, instructions } = reorder(items, {
+        type: "MOVE",
+        id: itemA.id,
+        toOrder: 1,
+      });
+
+      expect(orderById(newItems)).toStrictEqual(
+        orderById([
+          { ...itemA, order: 1 },
+          { ...itemB, order: 0 },
+          { ...itemC, order: 2 },
+        ])
+      );
+
+      const expectedInstructions: Instructions = [
+        {
+          type: "UPDATE",
+          id: itemA.id,
+          order: 1,
+        },
+        {
+          type: "UPDATE",
+          id: itemB.id,
+          order: 0,
+        },
+      ];
+
+      expect(orderById(instructions)).toStrictEqual(
+        orderById(expectedInstructions)
+      );
+    });
+
+    it("Moves items from bottom to middle of array", () => {
+      const { items: newItems, instructions } = reorder(items, {
+        type: "MOVE",
+        id: itemC.id,
+        toOrder: 1,
+      });
+
+      expect(orderById(newItems)).toStrictEqual(
+        orderById([
+          { ...itemA, order: 0 },
+          { ...itemB, order: 2 },
+          { ...itemC, order: 1 },
+        ])
+      );
+
+      const expectedInstructions: Instructions = [
+        {
+          type: "UPDATE",
+          id: itemB.id,
+          order: 2,
+        },
+        {
+          type: "UPDATE",
+          id: itemC.id,
+          order: 1,
         },
       ];
 
