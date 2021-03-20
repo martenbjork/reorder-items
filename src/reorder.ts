@@ -116,19 +116,10 @@ function moveItem<T extends ID>(
   items: OrderedItem<T>[],
   action: MoveAction<T>
 ): { items: OrderedItem<T>[]; instructions: UpdateInstruction<T>[] } {
-  // Algo:
-  // - Moved item leaves a hole
-  // - Destination needs space
-  // Items between source-destination indices are affected
-  //
-  // If moving up, bump every item between (destination <=> source)
-  // If moving down, reduce every item between (source <=> destination)
-
   let newItems = [...items];
   const instructions: UpdateInstruction<T>[] = [];
 
   const movedItem = items.find((item) => item.id === action.id);
-  console.log(action, movedItem);
   if (movedItem) {
     const direction = action.toOrder > movedItem.order ? "DOWN" : "UP";
     if (direction === "DOWN") {
@@ -138,6 +129,7 @@ function moveItem<T extends ID>(
           instructions.push({ type: "UPDATE", id: item.id, order: newOrder });
           return { ...item, order: newOrder };
         }
+
         if (item.id === action.id) {
           const newOrder = clampOrder(items.length, action.toOrder);
           instructions.push({ type: "UPDATE", id: item.id, order: newOrder });
@@ -152,10 +144,11 @@ function moveItem<T extends ID>(
           instructions.push({ type: "UPDATE", id: item.id, order: newOrder });
           return { ...item, order: newOrder };
         }
+
         if (item.id === action.id) {
           const newOrder = clampOrder(items.length, action.toOrder);
           instructions.push({ type: "UPDATE", id: item.id, order: newOrder });
-          return { ...item, order: clampOrder(items.length, action.toOrder) };
+          return { ...item, order: newOrder };
         }
         return item;
       });
