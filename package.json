@@ -1,6 +1,6 @@
 {
   "name": "reorder-items",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "A helpful algorithm for persisting the order of items.",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
