@@ -1,9 +1,9 @@
 {
   "name": "reorder-items",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "A helpful algorithm for persisting the order of items.",
-  "main": "build/cjs/index.js",
-  "module": "build/esm/index.js",
+  "main": "build/cjs/reorder.js",
+  "module": "build/esm/reorder.js",
   "types": "build/esm/reorder.d.ts",
   "files": [
     "build/"

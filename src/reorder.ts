@@ -10,6 +10,7 @@ import {
   RemoveInstruction,
   InsertInstruction,
 } from "./reorder.types";
+export * from "./reorder.types";
 
 function clampOrder<T extends ID>(itemCount: number, order: number): number {
   let newOrder = order;

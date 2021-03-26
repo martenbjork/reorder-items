@@ -8,5 +8,5 @@
     "lib": ["esnext"],
     "declaration": true
   },
-  "include": ["src/index.ts"]
+  "include": ["src/reorder.ts"]
 }
