@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "outDir": "build/esm",
-    "target": "esnext",
+    "target": "ES6",
     "sourceMap": true,
     "moduleResolution": "Node",
-    "module": "esnext",
-    "lib": ["esnext"],
+    "module": "ES6",
+    "lib": ["ES6"],
     "declaration": true
   },
   "include": ["src/reorder.ts"]
