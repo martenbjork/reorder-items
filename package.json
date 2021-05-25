@@ -46,6 +46,6 @@
     "@types/lodash.orderby": "4.6.6",
     "http-server": "0.12.3",
     "lodash.orderby": "4.6.0",
-    "ts-node": "9.1.1"
+    "ts-node": "10.0.0"
   }
 }
